@@ -197,7 +197,7 @@ namespace NOpenCode
             return body;
         }
 
-        private static JsonObject BuildModelObject(string modelString)
+        public static JsonObject BuildModelObject(string modelString)
         {
             var obj = new JsonObject();
             var slashIndex = modelString.IndexOf('/');

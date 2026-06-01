@@ -63,7 +63,6 @@ public class CoreTests
     [Fact]
     public void OpenCode_Ask_ReturnsString()
     {
-        // This is a compilation test — ensures the static API signature is correct.
         Func<Task<string>> call = () => OpenCode.Ask("test prompt");
         Assert.NotNull(call);
     }
@@ -79,7 +78,6 @@ public class CoreTests
     [Fact]
     public void SessionBuilder_ChainsCorrectly()
     {
-        // Compilation test for SessionBuilder API
         Assert.True(true);
     }
 
