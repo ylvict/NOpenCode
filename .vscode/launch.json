@@ -1,0 +1,132 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch 01-HelloWorld",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/01-HelloWorld/bin/Debug/net10.0/01-HelloWorld.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/01-HelloWorld",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch 02-OneShot",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/02-OneShot/bin/Debug/net10.0/02-OneShot.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/02-OneShot",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch 03-MultiTurn",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/03-MultiTurn/bin/Debug/net10.0/03-MultiTurn.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/03-MultiTurn",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch 04-Streaming",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/04-Streaming/bin/Debug/net10.0/04-Streaming.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/04-Streaming",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch 05-DI",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/05-DI/bin/Debug/net10.0/05-DI.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/05-DI",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch 06-SessionLifecycle",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/06-SessionLifecycle/bin/Debug/net10.0/06-SessionLifecycle.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/06-SessionLifecycle",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch 07-FileSearch",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/07-FileSearch/bin/Debug/net10.0/07-FileSearch.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/07-FileSearch",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch 08-Discovery",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/08-Discovery/bin/Debug/net10.0/08-Discovery.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/08-Discovery",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch 09-McpManagement",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/09-McpManagement/bin/Debug/net10.0/09-McpManagement.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/09-McpManagement",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch 10-EventMonitor",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "${workspaceFolder}/examples/10-EventMonitor/bin/Debug/net10.0/10-EventMonitor.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/examples/10-EventMonitor",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Debug Tests",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build all",
+            "program": "dotnet",
+            "args": [
+                "test",
+                "${workspaceFolder}/tests/NOpenCode.Tests/NOpenCode.Tests.csproj",
+                "--configuration",
+                "Debug",
+                "--no-build"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        }
+    ]
+}

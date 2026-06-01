@@ -1,0 +1,98 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "src/NOpenCode/NOpenCode.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "build all",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "test",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "test",
+                "tests/NOpenCode.Tests/NOpenCode.Tests.csproj",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "test"
+        },
+        {
+            "label": "test all",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "test",
+                "--configuration",
+                "Debug"
+            ],
+            "group": "test"
+        },
+        {
+            "label": "run 01-HelloWorld",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "examples/01-HelloWorld/01-HelloWorld.csproj"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "run 02-OneShot",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "examples/02-OneShot/02-OneShot.csproj"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "run 03-MultiTurn",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "examples/03-MultiTurn/03-MultiTurn.csproj"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "clean",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "clean",
+                "--configuration",
+                "Debug"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
