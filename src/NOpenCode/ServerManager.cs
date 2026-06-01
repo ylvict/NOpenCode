@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -127,7 +128,15 @@ namespace NOpenCode
                 if (proc.ExitCode == 0)
                 {
                     var line = output.Trim().Split('\n')[0].Trim('\r');
-                    return string.IsNullOrEmpty(line) ? null : line;
+                    if (string.IsNullOrEmpty(line))
+                        return null;
+                    if (IsWindows() && !IsExecutable(line))
+                    {
+                        var cmdPath = line + ".cmd";
+                        if (System.IO.File.Exists(cmdPath))
+                            return cmdPath;
+                    }
+                    return line;
                 }
             }
             catch { }
@@ -154,6 +163,18 @@ namespace NOpenCode
             catch { }
 
             return null;
+        }
+
+        private static bool IsWindows()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        }
+
+        private static bool IsExecutable(string path)
+        {
+            return path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+                || path.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)
+                || path.EndsWith(".bat", StringComparison.OrdinalIgnoreCase);
         }
 
         private static int GetRandomPort()
