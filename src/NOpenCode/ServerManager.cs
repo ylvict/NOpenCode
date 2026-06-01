@@ -1,59 +1,102 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace NOpenCode
 {
     internal class ServerManager : IAsyncDisposable
     {
+        private static readonly ConcurrentDictionary<int, ServerManager> ActiveServers = new();
+
+        private static readonly int[] DefaultPorts = { 4096, 54321, 9123 };
+
         private Process? _process;
         private readonly string _baseUrl;
+        private readonly int _port;
         private readonly bool _externallyManaged;
         private bool _disposed;
 
         public string BaseUrl => _baseUrl;
-        public bool IsExternallyManaged => _externallyManaged;
 
-        private ServerManager(string baseUrl, bool externallyManaged)
+        private ServerManager(string baseUrl, int port, bool externallyManaged)
         {
             _baseUrl = baseUrl;
+            _port = port;
             _externallyManaged = externallyManaged;
         }
 
         public static async Task<ServerManager> Start(ServerOptions options)
         {
-            var portsToTry = new List<int>();
-            if (options.Port.HasValue)
-                portsToTry.Add(options.Port.Value);
-            portsToTry.AddRange(new[] { 4096, 54321, 9123 });
+            var existing = await TryReuseExisting(options);
+            if (existing != null)
+                return existing;
 
-            foreach (var port in portsToTry)
+            return await StartNewServer(options);
+        }
+
+        private static async Task<ServerManager?> TryReuseExisting(ServerOptions options)
+        {
+            var ports = new List<int>();
+
+            if (options.Port.HasValue)
+                ports.Add(options.Port.Value);
+
+            foreach (var kvp in ActiveServers)
             {
-                var url = $"http://127.0.0.1:{port}";
-                if (await TryHealthCheck(url))
-                {
-                    return new ServerManager(url, externallyManaged: true);
-                }
+                if (!ports.Contains(kvp.Key))
+                    ports.Add(kvp.Key);
             }
 
+            ports.AddRange(DefaultPorts);
+
+            foreach (var port in ports)
+            {
+                var url = $"http://127.0.0.1:{port}";
+                if (await IsHealthy(url))
+                    return new ServerManager(url, port, externallyManaged: true);
+            }
+
+            return null;
+        }
+
+        private static async Task<ServerManager> StartNewServer(ServerOptions options)
+        {
             var cliPath = FindOpenCodeCli();
             if (cliPath == null)
                 throw new NOpenCodeNotInstalledException();
 
-            var randomPort = options.Port ?? GetRandomPort();
-            var serverUrl = $"http://127.0.0.1:{randomPort}";
+            var port = options.Port ?? GetRandomPort();
+            var url = $"http://127.0.0.1:{port}";
 
+            var process = StartProcess(cliPath, port);
+
+            var mgr = new ServerManager(url, port, externallyManaged: false)
+            {
+                _process = process
+            };
+
+            ActiveServers[port] = mgr;
+
+            await WaitForHealthOrThrow(process, url, port,
+                TimeSpan.FromSeconds(options.StartTimeoutSeconds));
+
+            return mgr;
+        }
+
+        private static Process StartProcess(string cliPath, int port)
+        {
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = cliPath,
-                    Arguments = $"serve --port {randomPort} --hostname 127.0.0.1",
+                    Arguments = $"serve --port {port} --hostname 127.0.0.1",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
@@ -63,50 +106,47 @@ namespace NOpenCode
             };
 
             process.Start();
+            return process;
+        }
 
-            var timeout = TimeSpan.FromSeconds(options.StartTimeoutSeconds);
+        private static async Task WaitForHealthOrThrow(Process process, string url, int port, TimeSpan timeout)
+        {
             var deadline = DateTime.UtcNow + timeout;
 
             while (DateTime.UtcNow < deadline)
             {
                 await Task.Delay(500);
+
                 if (process.HasExited)
                 {
-                    var stderr = await process.StandardError.ReadToEndAsync();
+                    ActiveServers.TryRemove(port, out _);
+                    var error = await process.StandardError.ReadToEndAsync();
                     throw new NOpenCodeServerException(
-                        $"opencode serve exited immediately: {stderr}");
+                        $"opencode serve exited immediately: {error}");
                 }
-                if (await TryHealthCheck(serverUrl))
-                {
-                    var mgr = new ServerManager(serverUrl, externallyManaged: false);
-                    mgr._process = process;
-                    return mgr;
-                }
+
+                if (await IsHealthy(url))
+                    return;
             }
 
+            ActiveServers.TryRemove(port, out _);
             throw new NOpenCodeServerException(
                 $"opencode serve did not become healthy within {timeout.TotalSeconds}s");
         }
 
-        private static async Task<bool> TryHealthCheck(string url)
+        private static string? FindOpenCodeCli()
         {
-            try
-            {
-                using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
-                var response = await client.GetAsync($"{url}/global/health");
-                if (!response.IsSuccessStatusCode) return false;
-                var body = await response.Content.ReadAsStringAsync();
-                var health = JsonSerializer.Deserialize<HealthInfo>(body,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                return health?.Healthy == true;
-            }
-            catch
-            {
-                return false;
-            }
+            var fromWhere = FindCliViaWhere();
+            if (fromWhere != null)
+                return fromWhere;
+
+            if (CanRunDirectly())
+                return "opencode";
+
+            return null;
         }
 
-        private static string? FindOpenCodeCli()
+        private static string? FindCliViaWhere()
         {
             try
             {
@@ -122,25 +162,35 @@ namespace NOpenCode
                         RedirectStandardError = true
                     }
                 };
+
                 proc.Start();
                 var output = proc.StandardOutput.ReadToEnd();
                 proc.WaitForExit(3000);
-                if (proc.ExitCode == 0)
-                {
-                    var line = output.Trim().Split('\n')[0].Trim('\r');
-                    if (string.IsNullOrEmpty(line))
-                        return null;
-                    if (IsWindows() && !IsExecutable(line))
-                    {
-                        var cmdPath = line + ".cmd";
-                        if (System.IO.File.Exists(cmdPath))
-                            return cmdPath;
-                    }
-                    return line;
-                }
-            }
-            catch { }
 
+                if (proc.ExitCode != 0)
+                    return null;
+
+                var path = output.Trim().Split('\n')[0].Trim('\r');
+                if (string.IsNullOrEmpty(path))
+                    return null;
+
+                if (IsWindows() && !IsExecutable(path))
+                {
+                    var cmdPath = path + ".cmd";
+                    if (File.Exists(cmdPath))
+                        return cmdPath;
+                }
+
+                return path;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static bool CanRunDirectly()
+        {
             try
             {
                 using var proc = new Process
@@ -155,31 +205,36 @@ namespace NOpenCode
                         RedirectStandardError = true
                     }
                 };
+
                 proc.Start();
                 proc.WaitForExit(3000);
-                if (proc.ExitCode == 0)
-                    return "opencode";
+                return proc.ExitCode == 0;
             }
-            catch { }
-
-            return null;
+            catch
+            {
+                return false;
+            }
         }
 
-        private static bool IsWindows()
+        private static async Task<bool> IsHealthy(string url)
         {
-            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-        }
+            try
+            {
+                using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
+                var response = await client.GetAsync($"{url}/global/health");
+                if (!response.IsSuccessStatusCode)
+                    return false;
 
-        private static bool IsExecutable(string path)
-        {
-            return path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
-                || path.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)
-                || path.EndsWith(".bat", StringComparison.OrdinalIgnoreCase);
-        }
+                var body = await response.Content.ReadAsStringAsync();
+                var health = JsonSerializer.Deserialize<HealthInfo>(body,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        private static int GetRandomPort()
-        {
-            return new Random().Next(10000, 60000);
+                return health?.Healthy == true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async ValueTask DisposeAsync()
@@ -187,26 +242,64 @@ namespace NOpenCode
             if (_disposed) return;
             _disposed = true;
 
-            if (!_externallyManaged && _process != null && !_process.HasExited)
+            ActiveServers.TryRemove(_port, out _);
+
+            if (_externallyManaged || _process == null || _process.HasExited)
+                return;
+
+            try
             {
-                try
-                {
-                    using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
-                    await client.PostAsync($"{_baseUrl}/instance/dispose", null);
-                }
-                catch { }
+                using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
+                await client.PostAsync($"{_baseUrl}/instance/dispose", null);
+            }
+            catch { }
 
-                try
-                {
-                    _process.Kill();
-                    _process.WaitForExit(5000);
-                }
-                catch { }
+            try
+            {
+                KillProcessTree(_process);
+            }
+            catch { }
 
-                _process.Dispose();
-                _process = null;
+            _process.Dispose();
+            _process = null;
+        }
+
+        private static void KillProcessTree(Process process)
+        {
+            if (IsWindows())
+            {
+                using var killer = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "taskkill",
+                        Arguments = $"/F /T /PID {process.Id}",
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    }
+                };
+                killer.Start();
+                killer.WaitForExit(5000);
+            }
+            else
+            {
+                process.Kill();
+                process.WaitForExit(5000);
             }
         }
+
+        private static bool IsWindows() =>
+            RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+        private static bool IsExecutable(string path) =>
+            path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase) ||
+            path.EndsWith(".bat", StringComparison.OrdinalIgnoreCase);
+
+        private static int GetRandomPort() =>
+            new Random().Next(10000, 60000);
     }
 
     public class ServerOptions
