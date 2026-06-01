@@ -1,6 +1,6 @@
 ﻿namespace NOpenCode.Tests;
 
-public class BuilderTests
+public class CoreTests
 {
     [Fact]
     public void Configure_ReturnsBuilder()
