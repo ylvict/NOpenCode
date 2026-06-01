@@ -9,7 +9,7 @@ namespace NOpenCode
         public string? ResponseBody { get; }
 
         public NOpenCodeRequestException(string endpoint, string message, int? httpStatus = null, string? responseBody = null, Exception? inner = null)
-            : base($"[{httpStatus}] {endpoint}: {message}", inner)
+            : base($"[{httpStatus}] {endpoint}: {message}\n{responseBody ?? ""}", inner)
         {
             Endpoint = endpoint;
             HttpStatus = httpStatus;

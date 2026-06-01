@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,17 +58,7 @@ namespace NOpenCode
             var options = new MessageOptions();
             configure?.Invoke(options);
 
-            var parts = new List<object>
-            {
-                new { type = "text", text = message }
-            };
-
-            var body = new
-            {
-                parts,
-                model = options.Model ?? _config.Model,
-                agent = options.Agent ?? _config.Agent
-            };
+            var body = BuildMessageDict(message, options);
 
             try
             {
@@ -152,31 +143,74 @@ namespace NOpenCode
 
         public async Task<OpenCodeReply> RunCommand(string command, string? arguments = null)
         {
-            var body = new { command, arguments, model = _config.Model, agent = _config.Agent };
+            var body = BuildCommandDict(command, arguments);
             return await _http.Post<OpenCodeReply>(
                 $"/session/{_sessionId}/command", body);
         }
 
         public async Task<OpenCodeReply> RunShell(string command)
         {
-            var body = new { command, model = _config.Model, agent = _config.Agent };
+            var body = BuildCommandDict(command, null);
             return await _http.Post<OpenCodeReply>(
                 $"/session/{_sessionId}/shell", body);
         }
 
-        private object BuildMessageBody(string message, MessageOptions? options = null)
+        private JsonObject BuildMessageBody(string message, MessageOptions? options = null)
         {
-            var parts = new List<object>
+            return BuildMessageDict(message, options);
+        }
+
+        private JsonObject BuildMessageDict(string message, MessageOptions? options)
+        {
+            var body = new JsonObject
             {
-                new { type = "text", text = message }
+                ["parts"] = new JsonArray
+                {
+                    new JsonObject { ["type"] = "text", ["text"] = message }
+                }
             };
 
-            return new
+            var modelId = options?.Model ?? _config.Model;
+            if (modelId != null)
+                body["model"] = BuildModelObject(modelId);
+
+            var agent = options?.Agent ?? _config.Agent;
+            if (agent != null)
+                body["agent"] = agent;
+
+            return body;
+        }
+
+        private JsonObject BuildCommandDict(string command, string? arguments)
+        {
+            var body = new JsonObject
             {
-                parts,
-                model = options?.Model ?? _config.Model,
-                agent = options?.Agent ?? _config.Agent
+                ["command"] = command,
+                ["arguments"] = arguments
             };
+
+            if (_config.Model != null)
+                body["model"] = BuildModelObject(_config.Model);
+            if (_config.Agent != null)
+                body["agent"] = _config.Agent;
+
+            return body;
+        }
+
+        private static JsonObject BuildModelObject(string modelString)
+        {
+            var obj = new JsonObject();
+            var slashIndex = modelString.IndexOf('/');
+            if (slashIndex > 0 && slashIndex < modelString.Length - 1)
+            {
+                obj["providerID"] = modelString.Substring(0, slashIndex);
+                obj["modelID"] = modelString.Substring(slashIndex + 1);
+            }
+            else
+            {
+                obj["modelID"] = modelString;
+            }
+            return obj;
         }
     }
 
