@@ -49,9 +49,7 @@ Console.WriteLine(answer);
 ```csharp
 string review = await OpenCode.Ask(
     "Review this code for potential bugs.",
-    cfg => cfg
-        .WithModel("opencode/deepseek-v4-flash-free")
-        .WithFile("Program.cs")
+    cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
 );
 
 // Or use the builder for full control

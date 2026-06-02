@@ -49,9 +49,7 @@ Console.WriteLine(answer);
 ```csharp
 string review = await OpenCode.Ask(
     "审查这段代码，找出潜在 Bug。",
-    cfg => cfg
-        .WithModel("opencode/deepseek-v4-flash-free")
-        .WithFile("Program.cs")
+    cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
 );
 
 // 或使用构建器获取完全控制

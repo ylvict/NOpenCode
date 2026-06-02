@@ -1,0 +1,27 @@
+name: Examples
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - run: dotnet restore
+
+      - name: Build all examples
+        run: |
+          for dir in examples/*/; do
+            echo "=== Building $dir ==="
+            dotnet build "$dir" --configuration Release --no-restore
+          done

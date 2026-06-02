@@ -1,11 +1,9 @@
 ﻿using NOpenCode;
 
-// One-shot query with configuration — choose model, attach a file.
+// One-shot query with configuration — choose a model.
 var answer = await OpenCode.Ask(
     "Review this code for potential bugs.",
-    cfg => cfg
-        .WithModel("opencode/deepseek-v4-flash-free")
-        .WithFile("Program.cs")
+    cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
 );
 
 Console.WriteLine("=== Review result ===");
