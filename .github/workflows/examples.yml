@@ -22,7 +22,7 @@ jobs:
           node-version: 22
 
       - name: Install opencode CLI
-        run: npm install -g @opencode/cli
+        run: npm install -g opencode-ai
 
       - name: Start opencode serve
         run: |

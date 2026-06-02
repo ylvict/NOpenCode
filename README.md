@@ -24,7 +24,7 @@ NOpenCode lets you control OpenCode from C# with a plain-English API. It auto-ma
 
 ## Prerequisites
 
-- [OpenCode CLI](https://opencode.ai/docs/cli/) installed (`npm install -g @opencode/cli`)
+- [OpenCode CLI](https://opencode.ai/docs/cli/) installed (`npm install -g opencode-ai`)
 - .NET SDK 8+ (for consumption) or .NET 10 (for development)
 
 ## Installation
