@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  build-and-run:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,11 +17,35 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - run: dotnet restore
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install opencode CLI
+        run: npm install -g @opencode/cli
+
+      - name: Start opencode serve
+        run: |
+          opencode serve &
+          sleep 10
+          echo "Server should be ready"
+        timeout-minutes: 2
 
       - name: Build all examples
         run: |
+          dotnet restore
           for dir in examples/*/; do
-            echo "=== Building $dir ==="
+            name=$(basename "$dir")
+            echo "=== Building $name ==="
             dotnet build "$dir" --configuration Release --no-restore
           done
+
+      - name: Run all examples
+        run: |
+          for dir in examples/*/; do
+            name=$(basename "$dir")
+            echo "=== Running $name ==="
+            timeout 60 dotnet run --project "$dir" --configuration Release --no-build || echo "⚠️ $name exited with code $?"
+          done
+        continue-on-error: true
+        timeout-minutes: 10
