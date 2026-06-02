@@ -1,27 +1,12 @@
 ﻿using NOpenCode;
 
-var repoRoot = FindRepoRoot();
-var srcDir = Path.Combine(repoRoot, "src");
-
-// One-shot query with full configuration — choose model, attach files, etc.
+// One-shot query with configuration — choose model, attach a file.
 var answer = await OpenCode.Ask(
     "Review this code for potential bugs.",
     cfg => cfg
         .WithModel("opencode/deepseek-v4-flash-free")
-        .InDirectory(srcDir)
+        .WithFile("Program.cs")
 );
-
-static string FindRepoRoot()
-{
-    var dir = AppContext.BaseDirectory;
-    while (dir != null)
-    {
-        if (File.Exists(Path.Combine(dir, "NOpenCode.slnx")))
-            return dir;
-        dir = Path.GetDirectoryName(dir);
-    }
-    return Directory.GetCurrentDirectory();
-}
 
 Console.WriteLine("=== Review result ===");
 Console.WriteLine(answer);
