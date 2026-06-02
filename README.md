@@ -1,5 +1,9 @@
 # NOpenCode
 
+[![NuGet](https://img.shields.io/nuget/v/NOpenCode?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NOpenCode)
+[![CI](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/ci.yml?style=flat-square&logo=github)](https://github.com/ylvict/NOpenCode/actions/workflows/ci.yml)
+[![中文文档](https://img.shields.io/badge/-%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3-forestgreen?style=flat-square)](./README.zh.md)
+
 A .NET SDK for [OpenCode](https://opencode.ai) — the open-source terminal AI coding assistant.
 
 NOpenCode lets you control OpenCode from C# with a plain-English API. It auto-manages the `opencode serve` process, so you can focus on your code.
@@ -47,7 +51,7 @@ string review = await OpenCode.Ask(
     "Review this code for potential bugs.",
     cfg => cfg
         .WithModel("opencode/deepseek-v4-flash-free")
-        .InDirectory(@"./src")
+        .WithFile("Program.cs")
 );
 
 // Or use the builder for full control
@@ -72,17 +76,17 @@ await using var ai = await OpenCode
     .WithModel("opencode/mimo-v2.5-free")
     .Launch();
 
-var session = await ai.NewSession("Architecture review").Create();
+var session = await ai.NewSession("API design").Create();
 
-var r1 = await session.Ask("What is the high-level architecture?");
-var r2 = await session.Ask("Where are the main entry points?");
+var r1 = await session.Ask("What are the key differences between REST and GraphQL?");
+var r2 = await session.Ask("When would you choose one over the other?");
 ```
 
 ### Streaming
 
 ```csharp
 await session.AskStream(
-    "Write a README for this project.",
+    "Write a brief README for a .NET library called NOpenCode.",
     onChunk: chunk => Console.Write(chunk),
     onComplete: reply => Console.WriteLine($"\nDone, tokens: {reply.Usage?.Total}"),
     onError: ex => Console.WriteLine($"Error: {ex.Message}")
@@ -92,7 +96,8 @@ await session.AskStream(
 ### Session lifecycle
 
 ```csharp
-var session = await ai.NewSession("Bug analysis").Create();
+var session = await ai.NewSession("Code review").Create();
+await session.Ask("Review this code for potential bugs.");
 
 // Fork into a new branch
 var fork = await session.Fork();

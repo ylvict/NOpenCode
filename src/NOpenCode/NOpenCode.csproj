@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>NOpenCode</PackageId>
-    <Version>0.1.0-preview</Version>
+    <Version>0.1.0</Version>
     <Authors>ylvict</Authors>
     <Description>A .NET SDK for OpenCode — control opencode's AI coding assistant programmatically with a plain-English API.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
