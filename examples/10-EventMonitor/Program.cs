@@ -14,24 +14,21 @@ Console.CancelKeyPress += (_, _) =>
     cts.Cancel();
 };
 
-// Stop if no events arrive for 5 seconds.
-var idleTimer = new Timer(_ => cts.Cancel());
-
-await ai.Events.Subscribe(
-    onEvent: evt =>
-    {
-        idleTimer.Change(5000, Timeout.Infinite);
-        Console.WriteLine(
-            $"[{evt.Type}] {evt.Data[..Math.Min(evt.Data.Length, 120)]}");
-    },
+// Subscribe first, then make a query to generate events.
+var subscribed = ai.Events.Subscribe(
+    onEvent: evt => Console.WriteLine(
+        $"[{evt.Type}] {evt.Data[..Math.Min(evt.Data.Length, 120)]}"),
     onError: ex => Console.WriteLine($"Error: {ex.Message}"),
-    onEnd: () =>
-    {
-        Console.WriteLine("Stream ended.");
-        cts.Cancel();
-    },
+    onEnd: () => Console.WriteLine("Stream ended."),
     ct: cts.Token
 );
 
-idleTimer.Dispose();
+var answer = await ai.Ask("What is 2+2?").Execute();
+Console.WriteLine($"\nAnswer: {answer}");
+
+// Give a moment for any remaining events, then stop.
+await Task.Delay(2000);
+cts.Cancel();
+
+await subscribed;
 Console.WriteLine("Done.");

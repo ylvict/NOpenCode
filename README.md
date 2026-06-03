@@ -163,18 +163,16 @@ public class ReviewService(OpenCodeClient AI)
 ### 📡 Real-time events
 
 ```csharp
-var cts = new CancellationTokenSource();
-var idle = new Timer(_ => cts.Cancel());
-
-await ai.Events.Subscribe(
-    onEvent: evt =>
-    {
-        idle.Change(5000, Timeout.Infinite);
-        Console.WriteLine($"[{evt.Type}] {evt.Data}");
-    },
-    onError: ex => Console.WriteLine($"Error: {ex.Message}"),
-    ct: cts.Token
+var subscribed = ai.Events.Subscribe(
+    onEvent: evt => Console.WriteLine($"[{evt.Type}] {evt.Data}"),
+    onError: ex => Console.WriteLine($"Error: {ex.Message}")
 );
+
+var answer = await ai.Ask("What is 2+2?").Execute();
+Console.WriteLine($"Answer: {answer}");
+
+await Task.Delay(2000);
+// subscribed completes when cancelled
 ```
 
 ## 📁 Project Structure

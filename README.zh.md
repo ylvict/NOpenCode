@@ -163,18 +163,16 @@ public class ReviewService(OpenCodeClient AI)
 ### 📡 实时事件
 
 ```csharp
-var cts = new CancellationTokenSource();
-var idle = new Timer(_ => cts.Cancel());
-
-await ai.Events.Subscribe(
-    onEvent: evt =>
-    {
-        idle.Change(5000, Timeout.Infinite);
-        Console.WriteLine($"[{evt.Type}] {evt.Data}");
-    },
-    onError: ex => Console.WriteLine($"错误：{ex.Message}"),
-    ct: cts.Token
+var subscribed = ai.Events.Subscribe(
+    onEvent: evt => Console.WriteLine($"[{evt.Type}] {evt.Data}"),
+    onError: ex => Console.WriteLine($"错误：{ex.Message}")
 );
+
+var answer = await ai.Ask("2+2 等于几？").Execute();
+Console.WriteLine($"答案：{answer}");
+
+await Task.Delay(2000);
+// subscribed 在取消时完成
 ```
 
 ## 📁 项目结构
