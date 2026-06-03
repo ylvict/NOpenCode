@@ -4,9 +4,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/ci.yml?style=flat-square&logo=github)](https://github.com/ylvict/NOpenCode/actions/workflows/ci.yml)
 [![中文文档](https://img.shields.io/badge/-%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3-forestgreen?style=flat-square)](./README.zh.md)
 
-A .NET SDK for [OpenCode](https://opencode.ai) — the open-source terminal AI coding assistant.
-
-NOpenCode lets you control OpenCode from C# with a plain-English API. It auto-manages the `opencode serve` process, so you can focus on your code.
+A .NET SDK that brings [OpenCode](https://opencode.ai)'s AI capabilities into your application services. Whether you need intelligent automation, data analysis, decision support, or any other AI-powered feature — describe your business problem in plain English and let OpenCode handle it. NOpenCode auto-manages the `opencode serve` process so you can focus on your application logic.
 
 ## Features
 

@@ -4,9 +4,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/ci.yml?style=flat-square&logo=github)](https://github.com/ylvict/NOpenCode/actions/workflows/ci.yml)
 [![English](https://img.shields.io/badge/-English-dodgerblue?style=flat-square)](./README.md)
 
-一个面向 [OpenCode](https://opencode.ai) 的 .NET SDK —— 开源终端 AI 编程助手。
-
-NOpenCode 让你通过自然语言的 API 在 C# 中控制 OpenCode。它会自动管理 `opencode serve` 进程，让你专注于代码本身。
+一个将 [OpenCode](https://opencode.ai) 的 AI 能力接入你应用服务的 .NET SDK。无论是智能自动化、数据分析、决策支持，还是其他 AI 驱动的功能——用自然语言描述你的业务问题，让 OpenCode 来处理。NOpenCode 自动管理 `opencode serve` 进程，让你专注于业务逻辑。
 
 ## 功能特性
 
