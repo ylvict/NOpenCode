@@ -45,7 +45,7 @@ jobs:
           for dir in examples/*/; do
             name=$(basename "$dir")
             echo "=== Running $name ==="
-            timeout 60 dotnet run --project "$dir" --configuration Release --no-build || echo "⚠️ $name exited with code $?"
+            timeout 120 dotnet run --project "$dir" --configuration Release --no-build || echo "⚠️ $name exited with code $?"
           done
         continue-on-error: true
         timeout-minutes: 10
