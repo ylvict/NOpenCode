@@ -7,7 +7,7 @@ using NOpenCode;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddNOpenCode(cfg => cfg
-    .WithModel("opencode/minimax-m3")
+    .WithModel("opencode/deepseek-v4-flash-free")
 );
 
 builder.Services.AddHostedService<ReviewWorker>();
@@ -21,7 +21,7 @@ public class ReviewWorker(OpenCodeClient AI) : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var reply = await AI
-            .Ask("What are the key .NET 10 features for developers?")
+            .Ask("What is the capital of France?")
             .Execute();
 
         Console.WriteLine(reply);

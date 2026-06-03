@@ -146,7 +146,7 @@ var servers = await ai.Mcp.List();
 
 ```csharp
 builder.Services.AddNOpenCode(cfg => cfg
-    .WithModel("opencode/minimax-m3")
+    .WithModel("opencode/deepseek-v4-flash-free")
 );
 
 public class ReviewService(OpenCodeClient AI)
@@ -154,7 +154,7 @@ public class ReviewService(OpenCodeClient AI)
     public async Task RunAsync()
     {
         var reply = await AI
-            .Ask("Review the latest changes")
+            .Ask("What is the capital of France?")
             .Execute();
     }
 }
