@@ -4,7 +4,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/ci.yml?style=flat-square&logo=github)](https://github.com/ylvict/NOpenCode/actions/workflows/ci.yml)
 [![中文文档](https://img.shields.io/badge/-%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3-forestgreen?style=flat-square)](./README.zh.md)
 
-A .NET SDK that brings [OpenCode](https://opencode.ai)'s AI capabilities into your application services. Describe your business problem in plain English and let AI handle it.
+Empower your .NET applications with [OpenCode](https://opencode.ai)'s AI engine. Describe complex business problems in natural language — NOpenCode bridges your application logic with AI.
 
 ## Features
 

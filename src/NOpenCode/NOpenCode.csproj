@@ -5,9 +5,10 @@
     <PackageId>NOpenCode</PackageId>
     <Version>0.1.0</Version>
     <Authors>ylvict</Authors>
-    <Description>A .NET SDK that brings OpenCode's AI capabilities into your application services. Describe business problems in plain English and let AI handle them.</Description>
+    <Description>Empower your .NET applications with OpenCode's AI engine. Describe complex business problems in natural language — NOpenCode bridges your application logic with AI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ylvict/NOpenCode</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ylvict/NOpenCode.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <LangVersion>10</LangVersion>
@@ -17,6 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
