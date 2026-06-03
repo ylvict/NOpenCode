@@ -6,6 +6,7 @@ public class ModelTests
     [
         "opencode/deepseek-v4-flash-free",
         "opencode/mimo-v2.5-free",
+        "opencode/minimax-m3-free",
         "opencode/nemotron-3-super-free",
     ];
 
