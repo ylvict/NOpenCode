@@ -5,9 +5,7 @@
     <PackageId>NOpenCode</PackageId>
     <Version>0.1.0</Version>
     <Authors>ylvict</Authors>
-    <Description>A .NET SDK that brings OpenCode's AI capabilities into your
-                 application services — describe business problems in
-                 plain English and let AI handle them.</Description>
+    <Description>A .NET SDK that brings OpenCode's AI capabilities into your application services. Describe business problems in plain English and let AI handle them.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ylvict/NOpenCode</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ylvict/NOpenCode.git</RepositoryUrl>
