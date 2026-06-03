@@ -25,6 +25,7 @@ namespace NOpenCode
     public class SubMatch
     {
         [JsonPropertyName("match")]
+        [JsonConverter(typeof(TextValueConverter))]
         public string? Match { get; set; }
 
         [JsonPropertyName("start")]
