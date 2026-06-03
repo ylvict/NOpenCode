@@ -3,6 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/NOpenCode?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NOpenCode)
 [![CI](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/ci.yml?style=flat-square&logo=github)](https://github.com/ylvict/NOpenCode/actions/workflows/ci.yml)
 [![Examples](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/examples.yml?style=flat-square&logo=github&label=examples)](https://github.com/ylvict/NOpenCode/actions/workflows/examples.yml)
+[![Integration](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/integration-tests.yml?style=flat-square&logo=github&label=integration)](https://github.com/ylvict/NOpenCode/actions/workflows/integration-tests.yml)
 [![README](https://img.shields.io/badge/README-%E4%B8%AD%E6%96%87-blue)](./README.zh.md)
 
 Empower your .NET applications with [OpenCode](https://opencode.ai)'s AI engine. Express your intent in natural language — NOpenCode bridges your application logic with AI.

@@ -3,6 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/NOpenCode?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NOpenCode)
 [![CI](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/ci.yml?style=flat-square&logo=github)](https://github.com/ylvict/NOpenCode/actions/workflows/ci.yml)
 [![Examples](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/examples.yml?style=flat-square&logo=github&label=examples)](https://github.com/ylvict/NOpenCode/actions/workflows/examples.yml)
+[![Integration](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/integration-tests.yml?style=flat-square&logo=github&label=integration)](https://github.com/ylvict/NOpenCode/actions/workflows/integration-tests.yml)
 [![README](https://img.shields.io/badge/README-English-blue)](./README.md)
 
 为你的 .NET 应用注入 [OpenCode](https://opencode.ai) 的 AI 引擎。用自然语言表达你的意图——NOpenCode 无缝桥接你的应用逻辑与 AI。
