@@ -6,7 +6,7 @@
 
 为你的 .NET 应用注入 [OpenCode](https://opencode.ai) 的 AI 引擎。用自然语言描述复杂的业务问题——NOpenCode 无缝桥接你的应用逻辑与 AI。
 
-## 功能特性
+## ✨ 功能特性
 
 - **零配置** — 自动发现或启动 `opencode serve`
 - **自然语言 API** — 读起来就像自然语言
@@ -20,18 +20,18 @@
 - **DI 集成** — ASP.NET Core / 控制台主机使用 `AddNOpenCode()`
 - **.NET Standard 2.0** — 兼容 .NET Framework 4.6.1+ 及所有现代 .NET
 
-## 前置条件
+## 📋 前置条件
 
 - 已安装 [OpenCode CLI](https://opencode.ai/docs/cli/) (`npm install -g opencode-ai`)
 - .NET SDK 8+（运行时）或 .NET 10（开发环境）
 
-## 安装
+## 📦 安装
 
 ```bash
 dotnet add package NOpenCode
 ```
 
-## 快速开始
+## 🚀 快速开始
 
 ```csharp
 using NOpenCode;
@@ -40,9 +40,9 @@ string answer = await OpenCode.Ask("用中文解释 C# 中 async/await 的工作
 Console.WriteLine(answer);
 ```
 
-## 示例
+## 💡 示例
 
-### 带配置的单次问答
+### 🎯 单次问答
 
 ```csharp
 string review = await OpenCode.Ask(
@@ -63,7 +63,7 @@ var reply = await ai
 Console.WriteLine(reply);
 ```
 
-### 多轮对话
+### 💬 多轮对话
 
 ```csharp
 await using var ai = await OpenCode
@@ -77,7 +77,7 @@ var r1 = await session.Ask("REST 和 GraphQL 的主要区别是什么？");
 var r2 = await session.Ask("什么时候应该选择哪一种？");
 ```
 
-### 流式响应
+### 🔄 流式响应
 
 ```csharp
 await session.AskStream(
@@ -88,7 +88,7 @@ await session.AskStream(
 );
 ```
 
-### 会话生命周期
+### 📋 会话生命周期
 
 ```csharp
 var session = await ai.NewSession("代码审查").Create();
@@ -110,7 +110,7 @@ await fork.Share();
 await fork.Delete();
 ```
 
-### 文件和代码搜索
+### 🔍 文件和代码搜索
 
 ```csharp
 var todos = await ai.Files.Search("TODO|FIXME");
@@ -121,7 +121,7 @@ var files = await ai.Files.Find("*.cs");
 var content = await ai.Files.Read("Program.cs");
 ```
 
-### 发现
+### 🗺️ 发现
 
 ```csharp
 var models = await ai.Models.List("opencode");
@@ -130,7 +130,7 @@ var agents = await ai.Agents.List();
 var health = await ai.Diagnostics.GetHealth();
 ```
 
-### MCP 服务器管理
+### 🔌 MCP 服务器管理
 
 ```csharp
 await ai.Mcp.Add("filesystem", new
@@ -142,7 +142,7 @@ await ai.Mcp.Add("filesystem", new
 var servers = await ai.Mcp.List();
 ```
 
-### DI 集成
+### 🧩 DI 集成
 
 ```csharp
 builder.Services.AddNOpenCode(cfg => cfg
@@ -160,7 +160,7 @@ public class ReviewService(OpenCodeClient AI)
 }
 ```
 
-### 实时事件
+### 📡 实时事件
 
 ```csharp
 var cts = new CancellationTokenSource();
@@ -177,7 +177,7 @@ await ai.Events.Subscribe(
 );
 ```
 
-## 项目结构
+## 📁 项目结构
 
 ```
 src/NOpenCode/              → .NET Standard 2.0 库
@@ -209,6 +209,6 @@ examples/                   → 10 个示例项目 (net10.0)
 tests/NOpenCode.Tests/      → xUnit 测试
 ```
 
-## 许可证
+## 📄 许可证
 
 MIT

@@ -6,7 +6,7 @@
 
 Empower your .NET applications with [OpenCode](https://opencode.ai)'s AI engine. Describe complex business problems in natural language — NOpenCode bridges your application logic with AI.
 
-## Features
+## ✨ Features
 
 - **Zero setup** — auto-discovers or starts `opencode serve` for you
 - **Plain-English API** — reads like natural language
@@ -20,18 +20,18 @@ Empower your .NET applications with [OpenCode](https://opencode.ai)'s AI engine.
 - **DI integration** — `AddNOpenCode()` for ASP.NET Core / console hosts
 - **.NET Standard 2.0** — compatible with .NET Framework 4.6.1+ and all modern .NET
 
-## Prerequisites
+## 📋 Prerequisites
 
 - [OpenCode CLI](https://opencode.ai/docs/cli/) installed (`npm install -g opencode-ai`)
 - .NET SDK 8+ (for consumption) or .NET 10 (for development)
 
-## Installation
+## 📦 Installation
 
 ```bash
 dotnet add package NOpenCode
 ```
 
-## Quick Start
+## 🚀 Quick Start
 
 ```csharp
 using NOpenCode;
@@ -40,9 +40,9 @@ string answer = await OpenCode.Ask("Explain how async/await works in C#");
 Console.WriteLine(answer);
 ```
 
-## Examples
+## 💡 Examples
 
-### One-shot with configuration
+### 🎯 One-shot
 
 ```csharp
 string review = await OpenCode.Ask(
@@ -63,7 +63,7 @@ var reply = await ai
 Console.WriteLine(reply);
 ```
 
-### Multi-turn conversation
+### 💬 Multi-turn
 
 ```csharp
 await using var ai = await OpenCode
@@ -77,7 +77,7 @@ var r1 = await session.Ask("What are the key differences between REST and GraphQ
 var r2 = await session.Ask("When would you choose one over the other?");
 ```
 
-### Streaming
+### 🔄 Streaming
 
 ```csharp
 await session.AskStream(
@@ -88,7 +88,7 @@ await session.AskStream(
 );
 ```
 
-### Session lifecycle
+### 📋 Session lifecycle
 
 ```csharp
 var session = await ai.NewSession("Code review").Create();
@@ -110,7 +110,7 @@ await fork.Share();
 await fork.Delete();
 ```
 
-### File & code search
+### 🔍 File & code search
 
 ```csharp
 var todos = await ai.Files.Search("TODO|FIXME");
@@ -121,7 +121,7 @@ var files = await ai.Files.Find("*.cs");
 var content = await ai.Files.Read("Program.cs");
 ```
 
-### Discovery
+### 🗺️ Discovery
 
 ```csharp
 var models = await ai.Models.List("opencode");
@@ -130,7 +130,7 @@ var agents = await ai.Agents.List();
 var health = await ai.Diagnostics.GetHealth();
 ```
 
-### MCP server management
+### 🔌 MCP server management
 
 ```csharp
 await ai.Mcp.Add("filesystem", new
@@ -142,7 +142,7 @@ await ai.Mcp.Add("filesystem", new
 var servers = await ai.Mcp.List();
 ```
 
-### DI integration
+### 🧩 DI integration
 
 ```csharp
 builder.Services.AddNOpenCode(cfg => cfg
@@ -160,7 +160,7 @@ public class ReviewService(OpenCodeClient AI)
 }
 ```
 
-### Real-time events
+### 📡 Real-time events
 
 ```csharp
 var cts = new CancellationTokenSource();
@@ -177,7 +177,7 @@ await ai.Events.Subscribe(
 );
 ```
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/NOpenCode/              → .NET Standard 2.0 library
@@ -209,6 +209,6 @@ examples/                   → 10 example projects (net10.0)
 tests/NOpenCode.Tests/      → xUnit tests
 ```
 
-## License
+## 📄 License
 
 MIT
