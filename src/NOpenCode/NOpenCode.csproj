@@ -3,11 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>NOpenCode</PackageId>
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
     <Authors>ylvict</Authors>
     <Description>Empower your .NET applications with OpenCode's AI engine. Express your intent in natural language — NOpenCode bridges your application logic with AI.</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>opencode;ai;sdk;llm;chat;copilot;assistant;dotnet;csharp</PackageTags>
     <PackageProjectUrl>https://github.com/ylvict/NOpenCode</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ylvict/NOpenCode.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
