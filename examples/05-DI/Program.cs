@@ -16,7 +16,7 @@ await builder.Build().RunAsync();
 
 // --- Worker using injected OpenCodeClient ---
 
-public class ReviewWorker(OpenCodeClient AI) : BackgroundService
+public class ReviewWorker(OpenCodeClient AI, IHostApplicationLifetime host) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -26,8 +26,6 @@ public class ReviewWorker(OpenCodeClient AI) : BackgroundService
 
         Console.WriteLine(reply);
 
-        // The hosted service lifecycle manages the server:
-        //   - StartAsync  → server is available
-        //   - StopAsync   → server is disposed
+        host.StopApplication();
     }
 }
