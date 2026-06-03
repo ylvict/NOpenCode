@@ -16,5 +16,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/NOpenCode.Tests/NOpenCode.Tests.csproj" />
+    <Project Path="tests/NOpenCode.IntegrationTests/NOpenCode.IntegrationTests.csproj" />
   </Folder>
 </Solution>
