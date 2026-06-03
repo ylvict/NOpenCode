@@ -46,7 +46,7 @@ Console.WriteLine(answer);
 
 ```csharp
 string review = await OpenCode.Ask(
-    "Review this code for potential bugs.",
+    "What is the capital of France?",
     cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
 );
 
@@ -57,8 +57,7 @@ await using var ai = await OpenCode
     .Launch();
 
 var reply = await ai
-    .Ask("What improvements would you suggest?")
-    .WithFiles("Program.cs", "Utils.cs")
+    .Ask("What is the population of Paris?")
     .Execute();
 
 Console.WriteLine(reply);

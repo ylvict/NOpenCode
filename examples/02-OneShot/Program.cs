@@ -2,11 +2,11 @@
 
 // One-shot query with configuration — choose a model.
 var answer = await OpenCode.Ask(
-    "Review this code for potential bugs.",
+    "What is the capital of France?",
     cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
 );
 
-Console.WriteLine("=== Review result ===");
+Console.WriteLine("=== Answer ===");
 Console.WriteLine(answer);
 
 // Or use the builder for more control:
@@ -16,9 +16,8 @@ var api = await OpenCode
     .Launch();
 
 var detailed = await api
-    .Ask("What improvements would you suggest for error handling?")
-    .WithFiles("Program.cs")
+    .Ask("What is the population of Paris?")
     .ExecuteFull();
 
-Console.WriteLine($"\n=== Detailed review (tokens: {detailed.Usage?.Total}) ===");
+Console.WriteLine($"\n=== Detailed (tokens: {detailed.Usage?.Total}) ===");
 Console.WriteLine(detailed.GetText());

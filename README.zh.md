@@ -46,7 +46,7 @@ Console.WriteLine(answer);
 
 ```csharp
 string review = await OpenCode.Ask(
-    "审查这段代码，找出潜在 Bug。",
+    "法国的首都是哪里？",
     cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
 );
 
@@ -57,8 +57,7 @@ await using var ai = await OpenCode
     .Launch();
 
 var reply = await ai
-    .Ask("你觉得哪些地方可以改进？")
-    .WithFiles("Program.cs", "Utils.cs")
+    .Ask("巴黎的人口是多少？")
     .Execute();
 
 Console.WriteLine(reply);
