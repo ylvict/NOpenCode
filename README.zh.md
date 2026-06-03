@@ -5,7 +5,7 @@
 [![Examples](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/examples.yml?style=flat-square&logo=github&label=examples)](https://github.com/ylvict/NOpenCode/actions/workflows/examples.yml)
 [![README](https://img.shields.io/badge/README-English-blue)](./README.md)
 
-为你的 .NET 应用注入 [OpenCode](https://opencode.ai) 的 AI 引擎。用自然语言描述复杂的业务问题——NOpenCode 无缝桥接你的应用逻辑与 AI。
+为你的 .NET 应用注入 [OpenCode](https://opencode.ai) 的 AI 引擎。用自然语言表达你的意图——NOpenCode 无缝桥接你的应用逻辑与 AI。
 
 ## ✨ 功能特性
 

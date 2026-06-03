@@ -5,7 +5,7 @@
     <PackageId>NOpenCode</PackageId>
     <Version>0.1.1</Version>
     <Authors>ylvict</Authors>
-    <Description>Empower your .NET applications with OpenCode's AI engine. Describe complex business problems in natural language — NOpenCode bridges your application logic with AI.</Description>
+    <Description>Empower your .NET applications with OpenCode's AI engine. Express your intent in natural language — NOpenCode bridges your application logic with AI.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ylvict/NOpenCode</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>

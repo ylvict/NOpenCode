@@ -5,7 +5,7 @@
 [![Examples](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/examples.yml?style=flat-square&logo=github&label=examples)](https://github.com/ylvict/NOpenCode/actions/workflows/examples.yml)
 [![README](https://img.shields.io/badge/README-%E4%B8%AD%E6%96%87-blue)](./README.zh.md)
 
-Empower your .NET applications with [OpenCode](https://opencode.ai)'s AI engine. Describe complex business problems in natural language — NOpenCode bridges your application logic with AI.
+Empower your .NET applications with [OpenCode](https://opencode.ai)'s AI engine. Express your intent in natural language — NOpenCode bridges your application logic with AI.
 
 ## ✨ Features
 
