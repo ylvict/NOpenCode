@@ -26,7 +26,7 @@ namespace NOpenCode
                     {
                         if (p.Models != null)
                         {
-                            foreach (var m in p.Models)
+                            foreach (var m in p.Models.Values)
                             {
                                 models.Add(new ModelInfo
                                 {
@@ -53,7 +53,7 @@ namespace NOpenCode
     {
         public string? Id { get; set; }
         public string? Name { get; set; }
-        public List<ModelEntry>? Models { get; set; }
+        public Dictionary<string, ModelEntry>? Models { get; set; }
     }
 
     internal class ModelEntry
