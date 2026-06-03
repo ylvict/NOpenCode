@@ -14,8 +14,8 @@ foreach (var kv in servers)
 // 2. Add a filesystem MCP server
 var status = await ai.Mcp.Add("filesystem", new
 {
-    command = "npx",
-    args = new[] { "-y", "@modelcontextprotocol/server-filesystem", "./" }
+    type = "local",
+    command = new[] { "npx", "-y", "@modelcontextprotocol/server-filesystem", "./" }
 });
 Console.WriteLine($"\nAdded '{status.Name}': {status.Status}");
 

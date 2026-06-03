@@ -136,8 +136,8 @@ var health = await ai.Diagnostics.GetHealth();
 ```csharp
 await ai.Mcp.Add("filesystem", new
 {
-    command = "npx",
-    args = new[] { "-y", "@modelcontextprotocol/server-filesystem", "./" }
+    type = "local",
+    command = new[] { "npx", "-y", "@modelcontextprotocol/server-filesystem", "./" }
 });
 
 var servers = await ai.Mcp.List();
