@@ -163,8 +163,15 @@ public class ReviewService(OpenCodeClient AI)
 ### 实时事件
 
 ```csharp
+var count = 0;
+var cts = new CancellationTokenSource();
+
 await ai.Events.Subscribe(
-    onEvent: evt => Console.WriteLine($"[{evt.Type}] {evt.Data}"),
+    onEvent: evt =>
+    {
+        Console.WriteLine($"[{evt.Type}] {evt.Data}");
+        if (++count >= 5) cts.Cancel();
+    },
     onError: ex => Console.WriteLine($"错误：{ex.Message}")
 );
 ```
