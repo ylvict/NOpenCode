@@ -7,8 +7,6 @@ await using var ai = await OpenCode
 
 Console.WriteLine("Listening for events...\n");
 
-// Subscribe to the event stream and stop after 5 events.
-var count = 0;
 var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, _) =>
 {
@@ -16,16 +14,24 @@ Console.CancelKeyPress += (_, _) =>
     cts.Cancel();
 };
 
+// Stop if no events arrive for 5 seconds.
+var idleTimer = new Timer(_ => cts.Cancel());
+
 await ai.Events.Subscribe(
     onEvent: evt =>
     {
+        idleTimer.Change(5000, Timeout.Infinite);
         Console.WriteLine(
             $"[{evt.Type}] {evt.Data[..Math.Min(evt.Data.Length, 120)]}");
-        if (++count >= 5) cts.Cancel();
     },
     onError: ex => Console.WriteLine($"Error: {ex.Message}"),
-    onEnd: () => Console.WriteLine("Stream ended."),
+    onEnd: () =>
+    {
+        Console.WriteLine("Stream ended.");
+        cts.Cancel();
+    },
     ct: cts.Token
 );
 
+idleTimer.Dispose();
 Console.WriteLine("Done.");

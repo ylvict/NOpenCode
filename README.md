@@ -163,16 +163,17 @@ public class ReviewService(OpenCodeClient AI)
 ### Real-time events
 
 ```csharp
-var count = 0;
 var cts = new CancellationTokenSource();
+var idle = new Timer(_ => cts.Cancel());
 
 await ai.Events.Subscribe(
     onEvent: evt =>
     {
+        idle.Change(5000, Timeout.Infinite);
         Console.WriteLine($"[{evt.Type}] {evt.Data}");
-        if (++count >= 5) cts.Cancel();
     },
-    onError: ex => Console.WriteLine($"Error: {ex.Message}")
+    onError: ex => Console.WriteLine($"Error: {ex.Message}"),
+    ct: cts.Token
 );
 ```
 
