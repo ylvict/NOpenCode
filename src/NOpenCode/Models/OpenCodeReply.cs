@@ -5,9 +5,6 @@ namespace NOpenCode
 {
     public class OpenCodeReply
     {
-        [JsonPropertyName("text")]
-        public string? Text { get; set; }
-
         [JsonPropertyName("parts")]
         public List<Part>? Parts { get; set; }
 
@@ -17,7 +14,23 @@ namespace NOpenCode
         [JsonPropertyName("messageId")]
         public string? MessageId { get; set; }
 
-        public string GetText() => Text ?? ExtractTextFromParts();
+        [JsonPropertyName("info")]
+        public ReplyInfo? Info { get; set; }
+
+        public string GetText() => ExtractTextFromParts();
+
+        public TokenUsage? GetUsage()
+        {
+            if (Usage != null) return Usage;
+            if (Info?.Tokens != null)
+                return new TokenUsage
+                {
+                    Input = Info.Tokens.Input,
+                    Output = Info.Tokens.Output,
+                    Total = Info.Tokens.Input + Info.Tokens.Output
+                };
+            return null;
+        }
 
         private string ExtractTextFromParts()
         {

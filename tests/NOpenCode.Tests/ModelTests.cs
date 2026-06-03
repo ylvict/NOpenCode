@@ -5,28 +5,27 @@ namespace NOpenCode.Tests;
 public class OpenCodeReplyTests
 {
     [Fact]
-    public void GetText_NullTextAndParts_ReturnsEmpty()
+    public void GetText_NullParts_ReturnsEmpty()
     {
-        var reply = new OpenCodeReply { Text = null, Parts = null };
+        var reply = new OpenCodeReply { Parts = null };
         Assert.Equal("", reply.GetText());
     }
 
     [Fact]
-    public void GetText_NullTextEmptyParts_ReturnsEmpty()
+    public void GetText_EmptyParts_ReturnsEmpty()
     {
-        var reply = new OpenCodeReply { Text = null, Parts = new() };
+        var reply = new OpenCodeReply { Parts = new() };
         Assert.Equal("", reply.GetText());
     }
 
     [Fact]
-    public void GetText_PrefersTextOverParts()
+    public void GetText_ReturnsFromTextParts()
     {
         var reply = new OpenCodeReply
         {
-            Text = "direct",
-            Parts = new() { new() { Type = "text", Text = "from parts" } }
+            Parts = new() { new() { Type = "text", Text = "hello" } }
         };
-        Assert.Equal("direct", reply.GetText());
+        Assert.Equal("hello", reply.GetText());
     }
 
     [Fact]
@@ -34,7 +33,6 @@ public class OpenCodeReplyTests
     {
         var reply = new OpenCodeReply
         {
-            Text = null,
             Parts = new()
             {
                 new() { Type = "toolUse", ToolName = "bash", Text = "should skip" },
@@ -49,7 +47,6 @@ public class OpenCodeReplyTests
     {
         var reply = new OpenCodeReply
         {
-            Text = null,
             Parts = new()
             {
                 new() { Type = "text", Text = "first" },
@@ -65,14 +62,42 @@ public class OpenCodeReplyTests
         var usage = new TokenUsage { Input = 10, Output = 20, Total = 30 };
         var reply = new OpenCodeReply
         {
-            Text = "text",
-            Parts = new(),
+            Parts = new() { new() { Type = "text", Text = "hello" } },
             Usage = usage,
             MessageId = "msg_123"
         };
-        Assert.Equal("text", reply.Text);
+        Assert.Equal("hello", reply.GetText());
         Assert.Equal(usage, reply.Usage);
         Assert.Equal("msg_123", reply.MessageId);
+    }
+}
+
+public class GetUsageTests
+{
+    [Fact]
+    public void ReturnsUsage_WhenTopLevel()
+    {
+        var reply = new OpenCodeReply { Usage = new() { Input = 1, Output = 2, Total = 3 } };
+        Assert.Equal(1, reply.GetUsage()?.Input);
+        Assert.Equal(3, reply.GetUsage()?.Total);
+    }
+
+    [Fact]
+    public void FallsBackToInfoTokens()
+    {
+        var reply = new OpenCodeReply
+        {
+            Info = new() { Tokens = new() { Input = 10, Output = 20 } }
+        };
+        Assert.Equal(10, reply.GetUsage()?.Input);
+        Assert.Equal(30, reply.GetUsage()?.Total);
+    }
+
+    [Fact]
+    public void ReturnsNull_WhenNoUsage()
+    {
+        var reply = new OpenCodeReply();
+        Assert.Null(reply.GetUsage());
     }
 }
 

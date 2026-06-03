@@ -19,5 +19,5 @@ var detailed = await api
     .Ask("What is the population of Paris?")
     .ExecuteFull();
 
-Console.WriteLine($"\n=== Detailed (tokens: {detailed.Usage?.Total}) ===");
+Console.WriteLine($"\n=== Detailed (tokens: {detailed.GetUsage()?.Total}) ===");
 Console.WriteLine(detailed.GetText());

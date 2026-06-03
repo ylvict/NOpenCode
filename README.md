@@ -83,7 +83,7 @@ var r2 = await session.Ask("When would you choose one over the other?");
 await session.AskStream(
     "Write a brief README for a .NET library called NOpenCode.",
     onChunk: chunk => Console.Write(chunk),
-    onComplete: reply => Console.WriteLine($"\nDone, tokens: {reply.Usage?.Total}"),
+    onComplete: reply => Console.WriteLine($"\nDone, tokens: {reply.GetUsage()?.Total}"),
     onError: ex => Console.WriteLine($"Error: {ex.Message}")
 );
 ```

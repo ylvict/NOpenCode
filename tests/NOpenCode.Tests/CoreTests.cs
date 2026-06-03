@@ -102,9 +102,9 @@ public class CoreTests
     {
         var reply = new OpenCodeReply
         {
-            Text = "Hello from text property"
+            Parts = new() { new() { Type = "text", Text = "Hello from parts" } }
         };
-        Assert.Equal("Hello from text property", reply.GetText());
+        Assert.Equal("Hello from parts", reply.GetText());
     }
 
     [Fact]
@@ -112,7 +112,6 @@ public class CoreTests
     {
         var reply = new OpenCodeReply
         {
-            Text = null,
             Parts = new()
             {
                 new() { Type = "text", Text = "Part 1" },

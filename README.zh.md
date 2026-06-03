@@ -83,7 +83,7 @@ var r2 = await session.Ask("什么时候应该选择哪一种？");
 await session.AskStream(
     "为一个名为 NOpenCode 的 .NET 库写一个简短的 README。",
     onChunk: chunk => Console.Write(chunk),
-    onComplete: reply => Console.WriteLine($"\n完成，Token 数：{reply.Usage?.Total}"),
+    onComplete: reply => Console.WriteLine($"\n完成，Token 数：{reply.GetUsage()?.Total}"),
     onError: ex => Console.WriteLine($"错误：{ex.Message}")
 );
 ```
