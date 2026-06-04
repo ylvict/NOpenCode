@@ -3,7 +3,7 @@
 // Full session lifecycle — create, fork, share, diff, delete.
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/deepseek-v4-flash-free")
+    .WithAnyFreeModel()
     .Launch();
 
 // 1. Create a session

@@ -8,9 +8,9 @@ public class BuildModelObjectTests
     [Fact]
     public void ParseFullProviderModel_SplitsCorrectly()
     {
-        var obj = OpenCodeSession.BuildModelObject("opencode/deepseek-v4-flash-free");
-        Assert.Equal("opencode", obj["providerID"]?.ToString());
-        Assert.Equal("deepseek-v4-flash-free", obj["modelID"]?.ToString());
+        var obj = OpenCodeSession.BuildModelObject("provider/test-model-v1");
+        Assert.Equal("provider", obj["providerID"]?.ToString());
+        Assert.Equal("test-model-v1", obj["modelID"]?.ToString());
     }
 
     [Fact]
@@ -56,10 +56,10 @@ public class BuildModelObjectTests
     [Fact]
     public void SerializesToJson_CorrectKeys()
     {
-        var obj = OpenCodeSession.BuildModelObject("opencode/deepseek-v4-flash-free");
+        var obj = OpenCodeSession.BuildModelObject("provider/test-model-v1");
         var json = JsonSerializer.Serialize(obj);
         using var doc = JsonDocument.Parse(json);
-        Assert.Equal("opencode", doc.RootElement.GetProperty("providerID").GetString());
-        Assert.Equal("deepseek-v4-flash-free", doc.RootElement.GetProperty("modelID").GetString());
+        Assert.Equal("provider", doc.RootElement.GetProperty("providerID").GetString());
+        Assert.Equal("test-model-v1", doc.RootElement.GetProperty("modelID").GetString());
     }
 }

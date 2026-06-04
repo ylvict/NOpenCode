@@ -2,23 +2,38 @@ namespace NOpenCode.IntegrationTests;
 
 public class AskTests
 {
-    [Theory]
-    [InlineData("opencode/deepseek-v4-flash-free")]
-    [InlineData("opencode/mimo-v2.5-free")]
-    [InlineData("opencode/minimax-m3-free")]
-    [InlineData("opencode/nemotron-3-super-free")]
-    public async Task Free_Model_Should_Return_Reply(string model)
+    [Fact]
+    public async Task Free_Model_Should_Return_Reply()
     {
         await using var ai = await OpenCode
             .Configure()
-            .WithModel(model)
             .Launch();
 
-        var reply = await ai
-            .Ask("Say exactly 'ok' and nothing else.")
-            .Execute();
+        var freeModels = (await ai.Models.List("opencode"))
+            .Where(m => m.Id != null && m.Id.EndsWith("-free", StringComparison.OrdinalIgnoreCase))
+            .Select(m => $"{m.Provider}/{m.Id}")
+            .ToList();
 
-        Assert.NotNull(reply);
-        Assert.NotEmpty(reply);
+        if (freeModels.Count == 0)
+        {
+            Assert.True(true, "No free models currently exposed; skipping.");
+            return;
+        }
+
+        foreach (var model in freeModels)
+        {
+            await using var sessionAi = await OpenCode
+                .Configure()
+#pragma warning disable CS0618 // 'WithModel(string)' is obsolete — used here deliberately to pin the discovered model id
+                .WithModel(model)
+#pragma warning restore CS0618
+                .Launch();
+
+            var reply = await sessionAi
+                .Ask("Say exactly 'ok' and nothing else.")
+                .Execute();
+
+            Assert.False(string.IsNullOrWhiteSpace(reply), $"Empty reply for model {model}");
+        }
     }
 }

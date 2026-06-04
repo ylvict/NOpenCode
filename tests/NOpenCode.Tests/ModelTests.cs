@@ -393,11 +393,11 @@ public class NOpenCodeConfigTests
     {
         var config = new NOpenCodeConfig
         {
-            Model = "opencode/deepseek-v4-flash-free",
+            Model = "provider/test-model",
             Agent = "coder",
             Title = "My Session"
         };
-        Assert.Equal("opencode/deepseek-v4-flash-free", config.Model);
+        Assert.Equal("provider/test-model", config.Model);
         Assert.Equal("coder", config.Agent);
         Assert.Equal("My Session", config.Title);
     }

@@ -7,7 +7,7 @@ using NOpenCode;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddNOpenCode(cfg => cfg
-    .WithModel("opencode/deepseek-v4-flash-free")
+    .WithAnyFreeModel()
 );
 
 builder.Services.AddHostedService<ReviewWorker>();

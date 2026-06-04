@@ -1,9 +1,9 @@
 ﻿using NOpenCode;
 
-// One-shot query with configuration — choose a model.
+// One-shot query with configuration — pick any free model at launch.
 var answer = await OpenCode.Ask(
     "What is the capital of France?",
-    cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
+    cfg => cfg.WithAnyFreeModel()
 );
 
 Console.WriteLine("=== Answer ===");
@@ -12,7 +12,7 @@ Console.WriteLine(answer);
 // Or use the builder for more control:
 var api = await OpenCode
     .Configure()
-    .WithModel("opencode/deepseek-v4-flash-free")
+    .WithAnyFreeModel()
     .Launch();
 
 var detailed = await api

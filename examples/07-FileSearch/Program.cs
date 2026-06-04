@@ -3,7 +3,7 @@
 // File and code search operations — search, find, read files.
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/mimo-v2.5-free")
+    .WithAnyFreeModel()
     .Launch();
 
 // 1. Text search (ripgrep) — find all TODOs

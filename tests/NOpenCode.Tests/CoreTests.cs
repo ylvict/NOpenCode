@@ -12,8 +12,10 @@ public class CoreTests
     [Fact]
     public void Builder_WithModel_SetsModel()
     {
+#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
         var builder = new NOpenCodeBuilder()
-            .WithModel("opencode/deepseek-v4-flash-free");
+            .WithModel("provider/test-model");
+#pragma warning restore CS0618
         Assert.NotNull(builder);
     }
 
@@ -44,8 +46,10 @@ public class CoreTests
     [Fact]
     public void Builder_ChainsMultipleCalls()
     {
+#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
         var builder = new NOpenCodeBuilder()
-            .WithModel("opencode/deepseek-v4-flash-free")
+            .WithModel("provider/test-model")
+#pragma warning restore CS0618
             .WithAgent("coder")
             .InDirectory(@"./src")
             .OnPort(4096);
@@ -55,8 +59,10 @@ public class CoreTests
     [Fact]
     public void AskOperation_UsingModel_ReturnsSelf()
     {
+#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
         var builder = new NOpenCodeBuilder()
-            .WithModel("opencode/deepseek-v4-flash-free");
+            .WithModel("provider/test-model");
+#pragma warning restore CS0618
         Assert.NotNull(builder);
     }
 
@@ -71,7 +77,9 @@ public class CoreTests
     public void OpenCode_Ask_WithConfig_ReturnsString()
     {
         Func<Task<string>> call = () => OpenCode.Ask("test", cfg =>
-            cfg.WithModel("opencode/deepseek-v4-flash-free"));
+#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
+            cfg.WithModel("provider/test-model"));
+#pragma warning restore CS0618
         Assert.NotNull(call);
     }
 
@@ -129,11 +137,11 @@ public class CoreTests
     {
         var model = new ModelInfo
         {
-            Id = "deepseek-v4-flash-free",
-            Name = "DeepSeek V4 Flash Free",
-            Provider = "opencode"
+            Id = "test-model",
+            Name = "Test Model",
+            Provider = "test-provider"
         };
-        Assert.Equal("deepseek-v4-flash-free", model.Id);
-        Assert.Equal("opencode", model.Provider);
+        Assert.Equal("test-model", model.Id);
+        Assert.Equal("test-provider", model.Provider);
     }
 }

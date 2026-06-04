@@ -3,7 +3,7 @@
 // Multi-turn conversation — create a session, ask follow-up questions.
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/mimo-v2.5-free")
+    .WithAnyFreeModel()
     .Launch();
 
 var session = await ai
