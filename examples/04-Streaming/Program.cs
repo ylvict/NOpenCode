@@ -3,7 +3,6 @@
 // Streaming — receive the response in chunks as it's generated.
 await using var ai = await OpenCode
     .Configure()
-    .WithAnyFreeModel()
     .Launch();
 
 Console.WriteLine("Generating documentation...\n");

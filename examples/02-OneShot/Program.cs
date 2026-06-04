@@ -1,9 +1,9 @@
 ﻿using NOpenCode;
 
-// One-shot query with configuration — pick any free model at launch.
+// One-shot query — no model specified, so the SDK auto-picks a free model
+// from the opencode provider at launch time.
 var answer = await OpenCode.Ask(
-    "What is the capital of France?",
-    cfg => cfg.WithAnyFreeModel()
+    "What is the capital of France?"
 );
 
 Console.WriteLine("=== Answer ===");
@@ -12,7 +12,6 @@ Console.WriteLine(answer);
 // Or use the builder for more control:
 var api = await OpenCode
     .Configure()
-    .WithAnyFreeModel()
     .Launch();
 
 var detailed = await api

@@ -7,10 +7,13 @@ namespace NOpenCode
 {
     public class NOpenCodeBuilder
     {
+        private static readonly Func<ModelInfo, bool> AnyFreeSelector =
+            m => m.Id != null && m.Id.EndsWith("-free", StringComparison.OrdinalIgnoreCase);
+
         internal string? Model { get; set; }
-        internal ModelSelectionMode ModelSelection { get; set; } = ModelSelectionMode.None;
+        internal ModelSelectionMode ModelSelection { get; set; } = ModelSelectionMode.AnyFree;
         internal string ModelSelectionProvider { get; set; } = Providers.OpenCode;
-        internal Func<ModelInfo, bool>? ModelSelector { get; set; }
+        internal Func<ModelInfo, bool>? ModelSelector { get; set; } = AnyFreeSelector;
         internal string? Agent { get; set; }
         internal string? Directory { get; set; }
         internal int? Port { get; set; }
@@ -29,20 +32,19 @@ namespace NOpenCode
         /// production code</b>, where an upstream model version bump can break your
         /// application.
         ///
-        /// Prefer capability-based selection such as
-        /// <see cref="WithModel(Func{ModelInfo, bool}, string)"/> or
-        /// <see cref="WithAnyFreeModel(string)"/>, or resolve a model id at runtime via
-        /// <c>OpenCodeClient.Models.List(provider)</c> and pick one that matches your
-        /// needs. Use this overload only when you deliberately want to pin a specific
-        /// version (for example, for reproducible research or short-lived experiments).
+        /// If no With*Model method is called, the SDK defaults to the first free-tier
+        /// model exposed by the <see cref="Providers.OpenCode"/> provider, resolved at
+        /// <see cref="Launch"/> time. To override that default with a custom predicate,
+        /// use <see cref="WithModel(Func{ModelInfo, bool}, string)"/>. To override only
+        /// the provider, use <see cref="WithAnyFreeModel(string)"/>. Use the obsolete
+        /// string overload only when you deliberately want to pin a specific version
+        /// (for example, for reproducible research or short-lived experiments).
         /// </remarks>
         /// <param name="model">A model id such as "opencode/deepseek-v4-flash-free".</param>
         [Obsolete("Direct model ids are owned by the upstream provider and may change " +
-                  "or disappear without notice, which can break production. Prefer " +
-                  "capability-based selection (e.g. WithModel(selector) or " +
-                  "WithAnyFreeModel), or discover current ids via " +
-                  "client.Models.List(provider). This overload is kept for backward " +
-                  "compatibility but is not recommended for production code.")]
+                  "or disappear without notice, which can break production. The default " +
+                  "behavior already auto-picks a free model at launch time; only call " +
+                  "this overload when you deliberately want to pin a specific version.")]
         public NOpenCodeBuilder WithModel(string model)
         {
             Model = model;
@@ -76,24 +78,22 @@ namespace NOpenCode
         }
 
         /// <summary>
-        /// Resolves, at launch time, to the first free-tier model exposed by the
-        /// upstream provider (models whose id ends with the "-free" suffix) and
-        /// pins the SDK to that model. This is a convenience wrapper around
-        /// <see cref="WithModel(Func{ModelInfo, bool}, string)"/> and is the
-        /// recommended way to use the SDK in production.
+        /// Overrides the default free-model selection to use a non-default provider.
         /// </summary>
         /// <remarks>
-        /// Resolution happens against the live server during <see cref="Launch"/>;
-        /// if the provider exposes no free-tier model at that moment,
-        /// <see cref="Launch"/> throws <see cref="NOpenCodeException"/> with a
-        /// descriptive message.
+        /// If no With*Model method is called, the SDK already auto-selects the first
+        /// free-tier model from the <see cref="Providers.OpenCode"/> provider at
+        /// <see cref="Launch"/> time. Use this method only when you need to pull a
+        /// free model from a different provider (e.g. <see cref="Providers.Anthropic"/>).
         /// </remarks>
         /// <param name="provider">The upstream provider to query. Defaults to "opencode".</param>
         public NOpenCodeBuilder WithAnyFreeModel(string provider = Providers.OpenCode)
         {
-            return WithModel(
-                m => m.Id != null && m.Id.EndsWith("-free", StringComparison.OrdinalIgnoreCase),
-                provider);
+            ModelSelector = AnyFreeSelector;
+            ModelSelectionProvider = provider;
+            ModelSelection = ModelSelectionMode.AnyFree;
+            Model = null;
+            return this;
         }
 
         public NOpenCodeBuilder WithAgent(string agent)
@@ -143,7 +143,7 @@ namespace NOpenCode
             var server = await ServerManager.Start(options);
             var client = new OpenCodeClient(server, this);
 
-            if (ModelSelection == ModelSelectionMode.Selector && ModelSelector != null)
+            if (ModelSelection != ModelSelectionMode.Explicit && ModelSelector != null)
                 await ResolveSelectorAsync(client);
 
             return client;
@@ -180,5 +180,6 @@ namespace NOpenCode
         None = 0,
         Explicit = 1,
         Selector = 2,
+        AnyFree = 3,
     }
 }

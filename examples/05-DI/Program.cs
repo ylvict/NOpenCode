@@ -6,9 +6,10 @@ using NOpenCode;
 // In a real app this would be in your Program.cs or Startup.cs.
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddNOpenCode(cfg => cfg
-    .WithAnyFreeModel()
-);
+builder.Services.AddNOpenCode(cfg =>
+{
+    // No model specified — the SDK auto-picks a free model at startup.
+});
 
 builder.Services.AddHostedService<ReviewWorker>();
 

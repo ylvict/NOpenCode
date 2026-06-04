@@ -3,7 +3,6 @@
 // Full session lifecycle — create, fork, share, diff, delete.
 await using var ai = await OpenCode
     .Configure()
-    .WithAnyFreeModel()
     .Launch();
 
 // 1. Create a session
