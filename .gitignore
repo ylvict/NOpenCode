@@ -21,5 +21,4 @@ Thumbs.db
 packages/
 *.log
 
-# OpenCode
-opencode.json
+
