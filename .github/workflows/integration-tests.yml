@@ -32,21 +32,6 @@ jobs:
       - name: Show resolved NOpenCode version
         run: dotnet list tests/NOpenCode.IntegrationTests package
 
-      - name: Start server and run tests
-        run: |
-          set -e
-          echo "opencode location: $(which opencode)"
-          opencode --version
-          opencode serve --port 4096 --hostname 127.0.0.1 > /tmp/opencode.log 2>&1 &
-          SERVE_PID=$!
-          for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
-            if curl -sf http://127.0.0.1:4096/global/health > /dev/null; then
-              echo "Server healthy after ${i}s"
-              break
-            fi
-            sleep 1
-          done
-          curl -sf http://127.0.0.1:4096/global/health > /dev/null || (echo "Server not healthy:" && cat /tmp/opencode.log && exit 1)
-          dotnet test tests/NOpenCode.IntegrationTests --configuration Release --no-restore --verbosity normal
-          kill $SERVE_PID 2>/dev/null || true
+      - name: Run integration tests
+        run: dotnet test tests/NOpenCode.IntegrationTests --configuration Release --no-restore --verbosity normal
         timeout-minutes: 15
