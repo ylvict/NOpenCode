@@ -20,3 +20,6 @@ Thumbs.db
 # Build
 packages/
 *.log
+
+# OpenCode
+opencode.json
