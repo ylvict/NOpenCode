@@ -32,8 +32,7 @@ namespace NOpenCode
                 {
                     if (data != null)
                         return new SseEvent { Type = eventType ?? "message", Data = data };
-                    data = null;
-                    eventType = null;
+                    continue;
                 }
             }
 

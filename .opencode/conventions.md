@@ -7,6 +7,39 @@
 - **Use `NOpenCodeBuilder.AnyFreeSelector`** to filter `Models.List()` results by free tier — don't inline the `-free` suffix predicate.
 - **Assert with `Assert.False(string.IsNullOrWhiteSpace(...))`**, not `Assert.NotNull` + `Assert.NotEmpty`.
 
+# Code style (preferences)
+
+- **Early return to reduce nesting.** When logic has 3+ levels of nesting, flatten with guard clauses. Each early `return` / `continue` / `break` goes on its own line:
+  ```csharp
+  // good
+  if (result?.Providers == null)
+      return new List<ModelInfo>();
+
+  // not
+  if (result?.Providers == null) return new List<ModelInfo>();
+  ```
+- **Prefer `List<T>.ForEach` over `foreach`** when iterating a concrete `List<T>`:
+  ```csharp
+  // good
+  list.ForEach(x => { ... });
+
+  // avoid
+  foreach (var x in list) { ... }
+  ```
+- **Prefer `SelectMany` + `.ToList()` over nested `foreach` + `Add`.** Build collections with LINQ fluent chains, not mutable accumulation:
+  ```csharp
+  // good
+  return result.Providers
+      .Where(p => p.Models != null)
+      .SelectMany(p => p.Models!.Values.Select(m => new ModelInfo { ... }))
+      .ToList();
+
+  // avoid
+  var models = new List<ModelInfo>();
+  foreach (var p in result.Providers) { models.Add(...); }
+  return models;
+  ```
+
 # Common pitfalls
 
 - **`ServerManager.cs` line 144 (`return "opencode"`).** This is the CLI executable name, NOT the provider id `Providers.OpenCode`. Do NOT change it to `Providers.OpenCode`.

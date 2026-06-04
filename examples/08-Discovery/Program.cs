@@ -8,29 +8,23 @@ await using var ai = await OpenCode
 // 1. List models for a specific provider
 var models = await ai.Models.List(Providers.OpenCode);
 Console.WriteLine("=== OpenCode Models ===");
-foreach (var m in models)
-    Console.WriteLine($"  {m.Id}");
+models.ForEach(m => Console.WriteLine($"  {m.Id}"));
 
 // 2. List all providers
 var providers = await ai.Providers.List();
 Console.WriteLine("\n=== Providers ===");
-if (providers.All != null)
-{
-    foreach (var p in providers.All)
-        Console.WriteLine($"  {p.Id}  (connected: {p.Connected})");
-}
+providers.All?.ForEach(p =>
+    Console.WriteLine($"  {p.Id}  (connected: {p.Connected})"));
 
 // 3. List available agents
 var agents = await ai.Agents.List();
 Console.WriteLine("\n=== Agents ===");
-foreach (var a in agents)
-    Console.WriteLine($"  {a.Name}  — {a.Description}");
+agents.ForEach(a => Console.WriteLine($"  {a.Name}  — {a.Description}"));
 
 // 4. List slash commands
 var commands = await ai.Commands.List();
 Console.WriteLine("\n=== Commands ===");
-foreach (var c in commands)
-    Console.WriteLine($"  /{c.Name}  — {c.Description}");
+commands.ForEach(c => Console.WriteLine($"  /{c.Name}  — {c.Description}"));
 
 // 5. Health check
 var health = await ai.Diagnostics.GetHealth();

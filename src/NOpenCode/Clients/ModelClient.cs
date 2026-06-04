@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,29 +18,20 @@ namespace NOpenCode
         {
             var path = "/config/providers";
             var result = await _http.Get<ProvidersResponse>(path, ct);
-            var models = new List<ModelInfo>();
-            if (result?.Providers != null)
-            {
-                foreach (var p in result.Providers)
+
+            if (result?.Providers == null)
+                return new List<ModelInfo>();
+
+            return result.Providers
+                .Where(p => provider == null || p.Id == provider)
+                .Where(p => p.Models != null)
+                .SelectMany(p => p.Models!.Values.Select(m => new ModelInfo
                 {
-                    if (provider == null || p.Id == provider)
-                    {
-                        if (p.Models != null)
-                        {
-                            foreach (var m in p.Models.Values)
-                            {
-                                models.Add(new ModelInfo
-                                {
-                                    Id = m.Id ?? "",
-                                    Name = m.Name ?? m.Id,
-                                    Provider = p.Id
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            return models;
+                    Id = m.Id ?? "",
+                    Name = m.Name ?? m.Id,
+                    Provider = p.Id
+                }))
+                .ToList();
         }
     }
 

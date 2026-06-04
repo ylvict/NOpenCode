@@ -23,8 +23,7 @@ Console.WriteLine($"Fork reply: {r2.GetText()[..100]}...\n");
 
 // 5. Get the diff from the fork
 var diff = await fork.GetDiff();
-foreach (var d in diff)
-    Console.WriteLine($"  [{d.Type}] {d.Path}");
+diff.ForEach(d => Console.WriteLine($"  [{d.Type}] {d.Path}"));
 
 // 6. Share the session
 await fork.Share();

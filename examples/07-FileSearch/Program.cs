@@ -9,10 +9,8 @@ await using var ai = await OpenCode
 var todos = await ai.Files.Search("TODO|FIXME|HACK");
 Console.WriteLine($"Found {todos.Count} items:\n");
 
-foreach (var match in todos)
-{
-    Console.WriteLine($"  {match.Path}:{match.LineNumber}  {match.Lines?.Trim()}");
-}
+todos.ForEach(match =>
+    Console.WriteLine($"  {match.Path}:{match.LineNumber}  {match.Lines?.Trim()}"));
 
 // 2. Find files by name
 var csFiles = await ai.Files.Find("*.cs");
