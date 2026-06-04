@@ -33,5 +33,9 @@ jobs:
         run: dotnet list tests/NOpenCode.IntegrationTests package
 
       - name: Run integration tests
-        run: dotnet test tests/NOpenCode.IntegrationTests --configuration Release --no-restore --verbosity normal
+        env:
+          XDG_DATA_HOME: /tmp/opencode-data-${{ github.run_id }}
+        run: |
+          rm -rf /tmp/opencode-data-${{ github.run_id }}
+          dotnet test tests/NOpenCode.IntegrationTests --configuration Release --no-restore --verbosity normal
         timeout-minutes: 15
