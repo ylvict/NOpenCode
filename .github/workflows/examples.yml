@@ -33,19 +33,13 @@ jobs:
 
       - name: Build all examples
         run: |
-          dotnet restore
-          for dir in examples/*/; do
-            name=$(basename "$dir")
-            echo "=== Building $name ==="
-            dotnet build "$dir" --configuration Release --no-restore
-          done
+          dotnet build examples/Examples.csproj --configuration Release
 
       - name: Run all examples
         run: |
-          for dir in examples/*/; do
-            name=$(basename "$dir")
+          for name in hello oneshot multiturn streaming di session filesearch discovery mcp eventmonitor; do
             echo "▶️ $name"
-            timeout 120 dotnet run --project "$dir" --configuration Release --no-build || echo "⚠️ $name exited with code $?"
+            timeout 120 dotnet run --project examples/Examples.csproj --configuration Release --no-build -- "$name" || echo "⚠️ $name exited with code $?"
           done
         continue-on-error: true
         timeout-minutes: 10

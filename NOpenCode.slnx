@@ -1,15 +1,6 @@
 <Solution>
   <Folder Name="/examples/">
-    <Project Path="examples/01-HelloWorld/01-HelloWorld.csproj" />
-    <Project Path="examples/02-OneShot/02-OneShot.csproj" />
-    <Project Path="examples/03-MultiTurn/03-MultiTurn.csproj" />
-    <Project Path="examples/04-Streaming/04-Streaming.csproj" />
-    <Project Path="examples/05-DI/05-DI.csproj" />
-    <Project Path="examples/06-SessionLifecycle/06-SessionLifecycle.csproj" />
-    <Project Path="examples/07-FileSearch/07-FileSearch.csproj" />
-    <Project Path="examples/08-Discovery/08-Discovery.csproj" />
-    <Project Path="examples/09-McpManagement/09-McpManagement.csproj" />
-    <Project Path="examples/10-EventMonitor/10-EventMonitor.csproj" />
+    <Project Path="examples/Examples.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/NOpenCode/NOpenCode.csproj" />

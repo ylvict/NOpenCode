@@ -1,0 +1,24 @@
+namespace Examples;
+
+static class Example04_Streaming
+{
+    public static async Task Run(string[] args)
+    {
+        await using var ai = await OpenCode
+            .Configure()
+            .Launch();
+
+        Console.WriteLine("Generating documentation...\n");
+
+        var session = await ai.NewSession("Docs generation").Create();
+
+        await session.AskStream(
+            "Write a brief README for a .NET library called NOpenCode.",
+            onChunk: chunk => Console.Write(chunk),
+            onComplete: reply => Console.WriteLine($"\n\n--- Done (tokens: {reply.GetUsage()?.Total}) ---"),
+            onError: ex => Console.WriteLine($"\nError: {ex.Message}")
+        );
+
+        await session.Delete();
+    }
+}

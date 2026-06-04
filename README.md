@@ -187,17 +187,17 @@ src/NOpenCode/              → .NET Standard 2.0 library
   DependencyInjection/      → IServiceCollection extensions
   Exceptions/               → Custom exception hierarchy
 
-examples/                   → 10 example projects (net10.0)
-  01-HelloWorld
-  02-OneShot
-  03-MultiTurn
-  04-Streaming
-  05-DI
-  06-SessionLifecycle
-  07-FileSearch
-  08-Discovery
-  09-McpManagement
-  10-EventMonitor
+examples/                   → 10 standalone example programs (net10.0)
+  HelloWorld               → Simplest possible usage
+  OneShot                  → Single query with builder
+  MultiTurn                → Multi-turn conversation
+  Streaming                → Streaming responses
+  DI                       → DI integration with AddNOpenCode
+  SessionLifecycle         → Fork, share, diff, delete
+  FileSearch               → ripgrep, find, list, read
+  Discovery                → List models, providers, agents, commands
+  McpManagement            → Add and list MCP servers
+  EventMonitor             → Real-time SSE events
 
 tests/NOpenCode.Tests/      → xUnit tests
 ```

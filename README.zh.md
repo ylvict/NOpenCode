@@ -187,17 +187,17 @@ src/NOpenCode/              → .NET Standard 2.0 库
   DependencyInjection/      → IServiceCollection 扩展
   Exceptions/               → 自定义异常层次
 
-examples/                   → 10 个示例项目 (net10.0)
-  01-HelloWorld
-  02-OneShot
-  03-MultiTurn
-  04-Streaming
-  05-DI
-  06-SessionLifecycle
-  07-FileSearch
-  08-Discovery
-  09-McpManagement
-  10-EventMonitor
+examples/                   → 10 个独立示例程序 (net10.0)
+  HelloWorld               → 最简用法
+  OneShot                  → 单次查询 + builder
+  MultiTurn                → 多轮对话
+  Streaming                → 流式响应
+  DI                       → DI 集成 AddNOpenCode
+  SessionLifecycle         → 分支、分享、比较、删除
+  FileSearch               → ripgrep、查找、列出、读取
+  Discovery                → 列出模型、提供方、智能体、命令
+  McpManagement            → 添加和列出 MCP 服务器
+  EventMonitor             → 实时 SSE 事件
 
 tests/NOpenCode.Tests/      → xUnit 测试
 ```
