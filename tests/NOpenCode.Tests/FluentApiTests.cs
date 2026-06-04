@@ -14,9 +14,7 @@ public class FluentApiTests
     {
         Func<Task<string>> ask = () => OpenCode.Ask("hello", cfg =>
         {
-#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
-            cfg.WithModel("provider/model");
-#pragma warning restore CS0618
+            cfg.WithModel(m => true);
             cfg.WithAgent("agent");
             cfg.InDirectory("./src");
             cfg.OnPort(5000);
@@ -53,9 +51,7 @@ public class FluentApiTests
     public void Builder_FluentChain_ReturnsSelf()
     {
         var builder = new NOpenCodeBuilder();
-#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
-        Assert.Same(builder, builder.WithModel("m"));
-#pragma warning restore CS0618
+        Assert.Same(builder, builder.WithModel(m => true));
         Assert.Same(builder, builder.WithAgent("a"));
         Assert.Same(builder, builder.InDirectory("d"));
         Assert.Same(builder, builder.OnPort(1));

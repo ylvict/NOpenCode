@@ -12,10 +12,8 @@ public class CoreTests
     [Fact]
     public void Builder_WithModel_SetsModel()
     {
-#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
         var builder = new NOpenCodeBuilder()
-            .WithModel("provider/test-model");
-#pragma warning restore CS0618
+            .WithModel(m => true);
         Assert.NotNull(builder);
     }
 
@@ -46,10 +44,8 @@ public class CoreTests
     [Fact]
     public void Builder_ChainsMultipleCalls()
     {
-#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
         var builder = new NOpenCodeBuilder()
-            .WithModel("provider/test-model")
-#pragma warning restore CS0618
+            .WithModel(m => true)
             .WithAgent("coder")
             .InDirectory(@"./src")
             .OnPort(4096);
@@ -59,10 +55,8 @@ public class CoreTests
     [Fact]
     public void AskOperation_UsingModel_ReturnsSelf()
     {
-#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
         var builder = new NOpenCodeBuilder()
-            .WithModel("provider/test-model");
-#pragma warning restore CS0618
+            .WithModel(m => true);
         Assert.NotNull(builder);
     }
 
@@ -77,9 +71,7 @@ public class CoreTests
     public void OpenCode_Ask_WithConfig_ReturnsString()
     {
         Func<Task<string>> call = () => OpenCode.Ask("test", cfg =>
-#pragma warning disable CS0618 // 'WithModel(string)' is obsolete
-            cfg.WithModel("provider/test-model"));
-#pragma warning restore CS0618
+            cfg.WithModel(m => true));
         Assert.NotNull(call);
     }
 

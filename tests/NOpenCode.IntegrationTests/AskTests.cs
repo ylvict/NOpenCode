@@ -24,9 +24,7 @@ public class AskTests
         {
             await using var sessionAi = await OpenCode
                 .Configure()
-#pragma warning disable CS0618 // 'WithModel(string)' is obsolete — used here deliberately to pin the discovered model id
                 .WithModel(model)
-#pragma warning restore CS0618
                 .Launch();
 
             var reply = await sessionAi
