@@ -1,6 +1,6 @@
 # Coding conventions
 
-- **No comments in code.** Make the code self-documenting or put context in the commit message.
+- **Keep code clean and self-documenting.** Comments are acceptable when the intent isn't obvious from the code alone — prefer explaining *why* over *what*.
 - **Use `Providers.OpenCode`** instead of the string `"opencode"` in all call sites (examples, tests, SDK internals). Exception: do NOT change `ServerManager.cs` — the `"opencode"` there is the CLI executable name, not a provider id.
 - **New code uses `WithModel(selector)` or `WithAnyFreeModel()`.** Do NOT use `WithModel(string)` in new code — it's `[Obsolete]` and triggers CS0618. The string overload exists only for backward compat.
 - **Suppress obsolete warnings in csproj, not with `#pragma`.** Use `<NoWarn>$(NoWarn);CS0618</NoWarn>` in the project file if a test project intentionally uses the obsolete API.
