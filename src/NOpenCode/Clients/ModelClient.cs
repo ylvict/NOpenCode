@@ -15,7 +15,7 @@ namespace NOpenCode
 
         public async Task<List<ModelInfo>> List(string? provider = null, CancellationToken ct = default)
         {
-            var path = provider != null ? $"/config/providers" : "/config/providers";
+            var path = "/config/providers";
             var result = await _http.Get<ProvidersResponse>(path, ct);
             var models = new List<ModelInfo>();
             if (result?.Providers != null)
