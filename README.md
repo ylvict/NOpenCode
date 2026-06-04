@@ -47,15 +47,11 @@ Console.WriteLine(answer);
 ### 🎯 One-shot
 
 ```csharp
-string review = await OpenCode.Ask(
-    "What is the capital of France?",
-    cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
-);
+string review = await OpenCode.Ask("What is the capital of France?");
 
 // Or use the builder for full control
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/deepseek-v4-flash-free")
     .Launch();
 
 var reply = await ai
@@ -70,7 +66,6 @@ Console.WriteLine(reply);
 ```csharp
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/mimo-v2.5-free")
     .Launch();
 
 var session = await ai.NewSession("API design").Create();
@@ -126,7 +121,7 @@ var content = await ai.Files.Read("Program.cs");
 ### 🗺️ Discovery
 
 ```csharp
-var models = await ai.Models.List("opencode");
+var models = await ai.Models.List(Providers.OpenCode);
 var providers = await ai.Providers.List();
 var agents = await ai.Agents.List();
 var health = await ai.Diagnostics.GetHealth();
@@ -147,9 +142,7 @@ var servers = await ai.Mcp.List();
 ### 🧩 DI integration
 
 ```csharp
-builder.Services.AddNOpenCode(cfg => cfg
-    .WithModel("opencode/deepseek-v4-flash-free")
-);
+builder.Services.AddNOpenCode();
 
 public class ReviewService(OpenCodeClient AI)
 {

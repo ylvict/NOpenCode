@@ -47,15 +47,11 @@ Console.WriteLine(answer);
 ### 🎯 单次问答
 
 ```csharp
-string review = await OpenCode.Ask(
-    "法国的首都是哪里？",
-    cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
-);
+string review = await OpenCode.Ask("法国的首都是哪里？");
 
-// 或使用构建器获取完全控制
+// 或者用 builder 拿完整控制
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/deepseek-v4-flash-free")
     .Launch();
 
 var reply = await ai
@@ -70,7 +66,6 @@ Console.WriteLine(reply);
 ```csharp
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/mimo-v2.5-free")
     .Launch();
 
 var session = await ai.NewSession("API 设计").Create();
@@ -126,7 +121,7 @@ var content = await ai.Files.Read("Program.cs");
 ### 🗺️ 发现
 
 ```csharp
-var models = await ai.Models.List("opencode");
+var models = await ai.Models.List(Providers.OpenCode);
 var providers = await ai.Providers.List();
 var agents = await ai.Agents.List();
 var health = await ai.Diagnostics.GetHealth();
@@ -147,9 +142,7 @@ var servers = await ai.Mcp.List();
 ### 🧩 DI 集成
 
 ```csharp
-builder.Services.AddNOpenCode(cfg => cfg
-    .WithModel("opencode/deepseek-v4-flash-free")
-);
+builder.Services.AddNOpenCode();
 
 public class ReviewService(OpenCodeClient AI)
 {
