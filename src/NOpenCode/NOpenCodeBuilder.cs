@@ -67,7 +67,7 @@ namespace NOpenCode
         /// </remarks>
         /// <param name="selector">Predicate run against every model from
         /// <paramref name="provider"/>. The first match is used.</param>
-        /// <param name="provider">The upstream provider to query. Defaults to "opencode".</param>
+        /// <param name="provider">The upstream provider to query. Defaults to <see cref="Providers.OpenCode"/>.</param>
         public NOpenCodeBuilder WithModel(Func<ModelInfo, bool> selector, string provider = Providers.OpenCode)
         {
             ModelSelector = selector ?? throw new ArgumentNullException(nameof(selector));
@@ -86,7 +86,7 @@ namespace NOpenCode
         /// <see cref="Launch"/> time. Use this method only when you need to pull a
         /// free model from a different provider (e.g. <see cref="Providers.Anthropic"/>).
         /// </remarks>
-        /// <param name="provider">The upstream provider to query. Defaults to "opencode".</param>
+        /// <param name="provider">The upstream provider to query. Defaults to <see cref="Providers.OpenCode"/>.</param>
         public NOpenCodeBuilder WithAnyFreeModel(string provider = Providers.OpenCode)
         {
             ModelSelector = AnyFreeSelector;

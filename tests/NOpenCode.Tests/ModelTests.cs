@@ -352,8 +352,8 @@ public class ProviderInfoTests
     [Fact]
     public void Properties_AreSettable()
     {
-        var provider = new ProviderInfo { Id = "opencode", Name = "OpenCode", Connected = true };
-        Assert.Equal("opencode", provider.Id);
+        var provider = new ProviderInfo { Id = Providers.OpenCode, Name = "OpenCode", Connected = true };
+        Assert.Equal(Providers.OpenCode, provider.Id);
         Assert.Equal("OpenCode", provider.Name);
         Assert.True(provider.Connected);
     }

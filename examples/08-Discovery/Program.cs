@@ -6,7 +6,7 @@ await using var ai = await OpenCode
     .Launch();
 
 // 1. List models for a specific provider
-var models = await ai.Models.List("opencode");
+var models = await ai.Models.List(Providers.OpenCode);
 Console.WriteLine("=== OpenCode Models ===");
 foreach (var m in models)
     Console.WriteLine($"  {m.Id}");
