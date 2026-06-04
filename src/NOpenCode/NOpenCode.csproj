@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>NOpenCode</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>ylvict</Authors>
     <Description>Empower your .NET applications with OpenCode's AI engine. Express your intent in natural language — NOpenCode bridges your application logic with AI.</Description>
     <PackageTags>opencode;ai;sdk;llm;chat;copilot;assistant;dotnet;csharp;natural-language;mcp;sse;integration;automation</PackageTags>

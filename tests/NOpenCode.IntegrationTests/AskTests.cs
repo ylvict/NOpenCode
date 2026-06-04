@@ -9,9 +9,8 @@ public class AskTests
             .Configure()
             .Launch();
 
-        var freeModels = (await ai.Models.List("opencode"))
-            .Where(m => m.Id != null && m.Id.EndsWith("-free", StringComparison.OrdinalIgnoreCase))
-            .Select(m => $"{m.Provider}/{m.Id}")
+        var freeModels = (await ai.Models.List(Providers.OpenCode))
+            .Where(NOpenCodeBuilder.AnyFreeSelector)
             .ToList();
 
         if (freeModels.Count == 0)
@@ -24,14 +23,14 @@ public class AskTests
         {
             await using var sessionAi = await OpenCode
                 .Configure()
-                .WithModel(model)
+                .WithModel(m => m.Provider == model.Provider && m.Id == model.Id)
                 .Launch();
 
             var reply = await sessionAi
                 .Ask("Say exactly 'ok' and nothing else.")
                 .Execute();
 
-            Assert.False(string.IsNullOrWhiteSpace(reply), $"Empty reply for model {model}");
+            Assert.False(string.IsNullOrWhiteSpace(reply), $"Empty reply for model {model.Provider}/{model.Id}");
         }
     }
 }

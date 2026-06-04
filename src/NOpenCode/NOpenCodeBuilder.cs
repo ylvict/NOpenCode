@@ -7,7 +7,15 @@ namespace NOpenCode
 {
     public class NOpenCodeBuilder
     {
-        private static readonly Func<ModelInfo, bool> AnyFreeSelector =
+        /// <summary>
+        /// Predicate that selects upstream models whose id ends with the
+        /// <c>-free</c> suffix (case-insensitive). This is the same predicate used
+        /// internally by <see cref="WithAnyFreeModel(string)"/> and by the default
+        /// model selection at <see cref="Launch"/> time, so consumers and tests
+        /// filtering <see cref="OpenCodeClient.Models"/> can reuse it to stay in
+        /// sync with the SDK's notion of "free tier".
+        /// </summary>
+        public static readonly Func<ModelInfo, bool> AnyFreeSelector =
             m => m.Id != null && m.Id.EndsWith("-free", StringComparison.OrdinalIgnoreCase);
 
         internal string? Model { get; set; }

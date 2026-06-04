@@ -9,9 +9,9 @@ public class ModelTests
             .Configure()
             .Launch();
 
-        var models = await ai.Models.List("opencode");
+        var models = await ai.Models.List(Providers.OpenCode);
         var freeModels = models
-            .Where(m => m.Id != null && m.Id.EndsWith("-free", StringComparison.OrdinalIgnoreCase))
+            .Where(NOpenCodeBuilder.AnyFreeSelector)
             .ToList();
 
         Assert.NotEmpty(freeModels);
