@@ -6,6 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NOpenCode\NOpenCode.csproj" />
+    <ProjectReference Include="..\src\NOpenCode\NOpenCode.csproj" />
   </ItemGroup>
 </Project>

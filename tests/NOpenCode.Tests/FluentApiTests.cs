@@ -14,7 +14,7 @@ public class FluentApiTests
     {
         Func<Task<string>> ask = () => OpenCode.Ask("hello", cfg =>
         {
-            cfg.WithModel("opencode/model");
+            cfg.WithModel(m => true);
             cfg.WithAgent("agent");
             cfg.InDirectory("./src");
             cfg.OnPort(5000);
@@ -51,7 +51,7 @@ public class FluentApiTests
     public void Builder_FluentChain_ReturnsSelf()
     {
         var builder = new NOpenCodeBuilder();
-        Assert.Same(builder, builder.WithModel("m"));
+        Assert.Same(builder, builder.WithModel(m => true));
         Assert.Same(builder, builder.WithAgent("a"));
         Assert.Same(builder, builder.InDirectory("d"));
         Assert.Same(builder, builder.OnPort(1));

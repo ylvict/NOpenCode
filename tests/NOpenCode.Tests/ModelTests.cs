@@ -352,8 +352,8 @@ public class ProviderInfoTests
     [Fact]
     public void Properties_AreSettable()
     {
-        var provider = new ProviderInfo { Id = "opencode", Name = "OpenCode", Connected = true };
-        Assert.Equal("opencode", provider.Id);
+        var provider = new ProviderInfo { Id = Providers.OpenCode, Name = "OpenCode", Connected = true };
+        Assert.Equal(Providers.OpenCode, provider.Id);
         Assert.Equal("OpenCode", provider.Name);
         Assert.True(provider.Connected);
     }
@@ -393,11 +393,11 @@ public class NOpenCodeConfigTests
     {
         var config = new NOpenCodeConfig
         {
-            Model = "opencode/deepseek-v4-flash-free",
+            Model = "provider/test-model",
             Agent = "coder",
             Title = "My Session"
         };
-        Assert.Equal("opencode/deepseek-v4-flash-free", config.Model);
+        Assert.Equal("provider/test-model", config.Model);
         Assert.Equal("coder", config.Agent);
         Assert.Equal("My Session", config.Title);
     }

@@ -1,0 +1,41 @@
+name: Integration Tests
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install opencode CLI
+        run: npm install -g opencode-ai
+
+      - name: Clear NuGet cache
+        run: dotnet nuget locals all --clear
+
+      - name: Restore with latest NOpenCode
+        run: dotnet restore tests/NOpenCode.IntegrationTests --force-evaluate
+
+      - name: Show resolved NOpenCode version
+        run: dotnet list tests/NOpenCode.IntegrationTests package
+
+      - name: Run integration tests
+        env:
+          XDG_DATA_HOME: /tmp/opencode-data-${{ github.run_id }}
+        run: |
+          rm -rf /tmp/opencode-data-${{ github.run_id }}
+          dotnet test tests/NOpenCode.IntegrationTests --configuration Release --no-restore --verbosity normal
+        timeout-minutes: 15

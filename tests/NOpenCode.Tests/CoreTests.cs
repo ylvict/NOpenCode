@@ -13,7 +13,7 @@ public class CoreTests
     public void Builder_WithModel_SetsModel()
     {
         var builder = new NOpenCodeBuilder()
-            .WithModel("opencode/deepseek-v4-flash-free");
+            .WithModel(m => true);
         Assert.NotNull(builder);
     }
 
@@ -45,7 +45,7 @@ public class CoreTests
     public void Builder_ChainsMultipleCalls()
     {
         var builder = new NOpenCodeBuilder()
-            .WithModel("opencode/deepseek-v4-flash-free")
+            .WithModel(m => true)
             .WithAgent("coder")
             .InDirectory(@"./src")
             .OnPort(4096);
@@ -56,7 +56,7 @@ public class CoreTests
     public void AskOperation_UsingModel_ReturnsSelf()
     {
         var builder = new NOpenCodeBuilder()
-            .WithModel("opencode/deepseek-v4-flash-free");
+            .WithModel(m => true);
         Assert.NotNull(builder);
     }
 
@@ -71,7 +71,7 @@ public class CoreTests
     public void OpenCode_Ask_WithConfig_ReturnsString()
     {
         Func<Task<string>> call = () => OpenCode.Ask("test", cfg =>
-            cfg.WithModel("opencode/deepseek-v4-flash-free"));
+            cfg.WithModel(m => true));
         Assert.NotNull(call);
     }
 
@@ -129,11 +129,11 @@ public class CoreTests
     {
         var model = new ModelInfo
         {
-            Id = "deepseek-v4-flash-free",
-            Name = "DeepSeek V4 Flash Free",
-            Provider = "opencode"
+            Id = "test-model",
+            Name = "Test Model",
+            Provider = "test-provider"
         };
-        Assert.Equal("deepseek-v4-flash-free", model.Id);
-        Assert.Equal("opencode", model.Provider);
+        Assert.Equal("test-model", model.Id);
+        Assert.Equal("test-provider", model.Provider);
     }
 }

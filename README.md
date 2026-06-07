@@ -3,6 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/NOpenCode?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NOpenCode)
 [![CI](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/ci.yml?style=flat-square&logo=github)](https://github.com/ylvict/NOpenCode/actions/workflows/ci.yml)
 [![Examples](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/examples.yml?style=flat-square&logo=github&label=examples)](https://github.com/ylvict/NOpenCode/actions/workflows/examples.yml)
+[![Integration](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/integration-tests.yml?style=flat-square&logo=github&label=integration)](https://github.com/ylvict/NOpenCode/actions/workflows/integration-tests.yml)
 [![README](https://img.shields.io/badge/README-%E4%B8%AD%E6%96%87-blue)](./README.zh.md)
 
 Empower your .NET applications with [OpenCode](https://opencode.ai)'s AI engine. Express your intent in natural language — NOpenCode bridges your application logic with AI.
@@ -46,15 +47,11 @@ Console.WriteLine(answer);
 ### 🎯 One-shot
 
 ```csharp
-string review = await OpenCode.Ask(
-    "What is the capital of France?",
-    cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
-);
+string review = await OpenCode.Ask("What is the capital of France?");
 
 // Or use the builder for full control
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/deepseek-v4-flash-free")
     .Launch();
 
 var reply = await ai
@@ -69,7 +66,6 @@ Console.WriteLine(reply);
 ```csharp
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/mimo-v2.5-free")
     .Launch();
 
 var session = await ai.NewSession("API design").Create();
@@ -125,7 +121,7 @@ var content = await ai.Files.Read("Program.cs");
 ### 🗺️ Discovery
 
 ```csharp
-var models = await ai.Models.List("opencode");
+var models = await ai.Models.List(Providers.OpenCode);
 var providers = await ai.Providers.List();
 var agents = await ai.Agents.List();
 var health = await ai.Diagnostics.GetHealth();
@@ -146,9 +142,7 @@ var servers = await ai.Mcp.List();
 ### 🧩 DI integration
 
 ```csharp
-builder.Services.AddNOpenCode(cfg => cfg
-    .WithModel("opencode/deepseek-v4-flash-free")
-);
+builder.Services.AddNOpenCode();
 
 public class ReviewService(OpenCodeClient AI)
 {
@@ -193,17 +187,17 @@ src/NOpenCode/              → .NET Standard 2.0 library
   DependencyInjection/      → IServiceCollection extensions
   Exceptions/               → Custom exception hierarchy
 
-examples/                   → 10 example projects (net10.0)
-  01-HelloWorld
-  02-OneShot
-  03-MultiTurn
-  04-Streaming
-  05-DI
-  06-SessionLifecycle
-  07-FileSearch
-  08-Discovery
-  09-McpManagement
-  10-EventMonitor
+examples/                   → 10 standalone example programs (net10.0)
+  HelloWorld               → Simplest possible usage
+  OneShot                  → Single query with builder
+  MultiTurn                → Multi-turn conversation
+  Streaming                → Streaming responses
+  DI                       → DI integration with AddNOpenCode
+  SessionLifecycle         → Fork, share, diff, delete
+  FileSearch               → ripgrep, find, list, read
+  Discovery                → List models, providers, agents, commands
+  McpManagement            → Add and list MCP servers
+  EventMonitor             → Real-time SSE events
 
 tests/NOpenCode.Tests/      → xUnit tests
 ```

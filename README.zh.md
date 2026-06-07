@@ -3,6 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/NOpenCode?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NOpenCode)
 [![CI](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/ci.yml?style=flat-square&logo=github)](https://github.com/ylvict/NOpenCode/actions/workflows/ci.yml)
 [![Examples](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/examples.yml?style=flat-square&logo=github&label=examples)](https://github.com/ylvict/NOpenCode/actions/workflows/examples.yml)
+[![Integration](https://img.shields.io/github/actions/workflow/status/ylvict/NOpenCode/integration-tests.yml?style=flat-square&logo=github&label=integration)](https://github.com/ylvict/NOpenCode/actions/workflows/integration-tests.yml)
 [![README](https://img.shields.io/badge/README-English-blue)](./README.md)
 
 为你的 .NET 应用注入 [OpenCode](https://opencode.ai) 的 AI 引擎。用自然语言表达你的意图——NOpenCode 无缝桥接你的应用逻辑与 AI。
@@ -46,15 +47,11 @@ Console.WriteLine(answer);
 ### 🎯 单次问答
 
 ```csharp
-string review = await OpenCode.Ask(
-    "法国的首都是哪里？",
-    cfg => cfg.WithModel("opencode/deepseek-v4-flash-free")
-);
+string review = await OpenCode.Ask("法国的首都是哪里？");
 
-// 或使用构建器获取完全控制
+// 或者用 builder 拿完整控制
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/deepseek-v4-flash-free")
     .Launch();
 
 var reply = await ai
@@ -69,7 +66,6 @@ Console.WriteLine(reply);
 ```csharp
 await using var ai = await OpenCode
     .Configure()
-    .WithModel("opencode/mimo-v2.5-free")
     .Launch();
 
 var session = await ai.NewSession("API 设计").Create();
@@ -125,7 +121,7 @@ var content = await ai.Files.Read("Program.cs");
 ### 🗺️ 发现
 
 ```csharp
-var models = await ai.Models.List("opencode");
+var models = await ai.Models.List(Providers.OpenCode);
 var providers = await ai.Providers.List();
 var agents = await ai.Agents.List();
 var health = await ai.Diagnostics.GetHealth();
@@ -146,9 +142,7 @@ var servers = await ai.Mcp.List();
 ### 🧩 DI 集成
 
 ```csharp
-builder.Services.AddNOpenCode(cfg => cfg
-    .WithModel("opencode/deepseek-v4-flash-free")
-);
+builder.Services.AddNOpenCode();
 
 public class ReviewService(OpenCodeClient AI)
 {
@@ -193,17 +187,17 @@ src/NOpenCode/              → .NET Standard 2.0 库
   DependencyInjection/      → IServiceCollection 扩展
   Exceptions/               → 自定义异常层次
 
-examples/                   → 10 个示例项目 (net10.0)
-  01-HelloWorld
-  02-OneShot
-  03-MultiTurn
-  04-Streaming
-  05-DI
-  06-SessionLifecycle
-  07-FileSearch
-  08-Discovery
-  09-McpManagement
-  10-EventMonitor
+examples/                   → 10 个独立示例程序 (net10.0)
+  HelloWorld               → 最简用法
+  OneShot                  → 单次查询 + builder
+  MultiTurn                → 多轮对话
+  Streaming                → 流式响应
+  DI                       → DI 集成 AddNOpenCode
+  SessionLifecycle         → 分支、分享、比较、删除
+  FileSearch               → ripgrep、查找、列出、读取
+  Discovery                → 列出模型、提供方、智能体、命令
+  McpManagement            → 添加和列出 MCP 服务器
+  EventMonitor             → 实时 SSE 事件
 
 tests/NOpenCode.Tests/      → xUnit 测试
 ```
