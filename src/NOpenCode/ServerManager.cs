@@ -20,15 +20,17 @@ namespace NOpenCode
         private readonly string _baseUrl;
         private readonly int _port;
         private readonly bool _externallyManaged;
+        private readonly string? _dataDir;
         private bool _disposed;
 
         public string BaseUrl => _baseUrl;
 
-        private ServerManager(string baseUrl, int port, bool externallyManaged)
+        private ServerManager(string baseUrl, int port, bool externallyManaged, string? dataDir = null)
         {
             _baseUrl = baseUrl;
             _port = port;
             _externallyManaged = externallyManaged;
+            _dataDir = dataDir;
         }
 
         public static async Task<ServerManager> Start(ServerOptions options)
@@ -74,9 +76,12 @@ namespace NOpenCode
             var port = options.Port ?? GetRandomPort();
             var url = $"http://127.0.0.1:{port}";
 
-            var process = StartProcess(cliPath, port);
+            var dataDir = Path.Combine(Path.GetTempPath(), "opencode-sdk", Path.GetRandomFileName());
+            Directory.CreateDirectory(dataDir);
 
-            var mgr = new ServerManager(url, port, externallyManaged: false)
+            var process = StartProcess(cliPath, port, dataDir);
+
+            var mgr = new ServerManager(url, port, externallyManaged: false, dataDir)
             {
                 _process = process
             };
@@ -89,7 +94,7 @@ namespace NOpenCode
             return mgr;
         }
 
-        private static Process StartProcess(string cliPath, int port)
+        private static Process StartProcess(string cliPath, int port, string dataDir)
         {
             var process = new Process
             {
@@ -104,6 +109,8 @@ namespace NOpenCode
                 },
                 EnableRaisingEvents = true
             };
+
+            process.StartInfo.EnvironmentVariables["XDG_DATA_HOME"] = dataDir;
 
             process.Start();
             return process;
@@ -142,6 +149,42 @@ namespace NOpenCode
 
             if (CanRunDirectly())
                 return "opencode";
+
+            var npmCli = FindNpmGlobalCli();
+            if (npmCli != null)
+                return npmCli;
+
+            return null;
+        }
+
+        private static string? FindNpmGlobalCli()
+        {
+            try
+            {
+                var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                if (string.IsNullOrEmpty(home))
+                    return null;
+
+                var candidates = new[]
+                {
+                    Path.Combine(home, ".opencode", "bin", "opencode"),
+                    Path.Combine(home, ".opencode", "bin", "opencode.cmd"),
+                };
+
+                if (!IsWindows())
+                {
+                    Array.Resize(ref candidates, 1);
+                }
+
+                foreach (var candidate in candidates)
+                {
+                    if (File.Exists(candidate))
+                        return candidate;
+                }
+            }
+            catch
+            {
+            }
 
             return null;
         }
@@ -207,6 +250,7 @@ namespace NOpenCode
                 };
 
                 proc.Start();
+                proc.StandardOutput.ReadToEnd();
                 proc.WaitForExit(3000);
                 return proc.ExitCode == 0;
             }
@@ -262,6 +306,21 @@ namespace NOpenCode
 
             _process.Dispose();
             _process = null;
+
+            CleanupDataDir();
+        }
+
+        private void CleanupDataDir()
+        {
+            if (_dataDir == null)
+                return;
+
+            try
+            {
+                if (Directory.Exists(_dataDir))
+                    Directory.Delete(_dataDir, recursive: true);
+            }
+            catch { }
         }
 
         private static void KillProcessTree(Process process)
