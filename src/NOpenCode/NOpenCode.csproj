@@ -22,7 +22,7 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <PackageReference Include="System.Text.Json" Version="10.0.8" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" />
