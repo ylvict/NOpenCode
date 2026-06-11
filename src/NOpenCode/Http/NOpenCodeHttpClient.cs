@@ -88,6 +88,23 @@ namespace NOpenCode
             return await response.Content.ReadAsStreamAsync();
         }
 
+        public async Task<Stream> PostStream(string path, object? body = null, CancellationToken ct = default)
+        {
+            var content = SerializeBody(body);
+            var request = new HttpRequestMessage(HttpMethod.Post, path)
+            {
+                Content = content ?? new StringContent("", Encoding.UTF8, "application/json")
+            };
+            var response = await _http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct);
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                throw new NOpenCodeRequestException(
+                    path, $"Server returned {response.StatusCode}", (int)response.StatusCode, responseBody);
+            }
+            return await response.Content.ReadAsStreamAsync();
+        }
+
         public async IAsyncEnumerable<string> ReadSse(string path, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct = default)
         {
             using var request = new HttpRequestMessage(HttpMethod.Get, path);

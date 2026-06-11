@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,23 +61,43 @@ namespace NOpenCode
             configure?.Invoke(options);
 
             var body = BuildMessageDict(message, options);
+            body["stream"] = true;
 
             try
             {
-                var fullReply = await _http.Post<OpenCodeReply>(
+                using var stream = await _http.PostStream(
                     $"/session/{_sessionId}/message", body, ct);
 
-                var text = fullReply.GetText();
-                if (!string.IsNullOrEmpty(text))
+                using var reader = new SseReader(stream);
+                OpenCodeReply? finalReply = null;
+
+                while (!ct.IsCancellationRequested)
                 {
-                    onChunk(text);
+                    var evt = await reader.ReadEventAsync(ct);
+                    if (evt == null) break;
+
+                    if (evt.Type == "chunk")
+                    {
+                        var part = JsonSerializer.Deserialize<Part>(evt.Data);
+                        if (part?.Type == "text" && part.Text != null)
+                            onChunk(part.Text);
+                    }
+                    else if (evt.Type == "complete")
+                    {
+                        finalReply = JsonSerializer.Deserialize<OpenCodeReply>(evt.Data);
+                    }
+                    else if (evt.Type == "error")
+                    {
+                        throw new NOpenCodeException(
+                            $"Server streaming error: {evt.Data}");
+                    }
                 }
 
-                onComplete?.Invoke(fullReply);
+                onComplete?.Invoke(finalReply ?? new OpenCodeReply());
             }
-            catch (Exception ex)
+            catch (Exception ex) when (onError != null)
             {
-                onError?.Invoke(ex);
+                onError(ex);
             }
         }
 
@@ -162,13 +184,24 @@ namespace NOpenCode
 
         private JsonObject BuildMessageDict(string message, MessageOptions? options)
         {
-            var body = new JsonObject
+            var parts = new JsonArray
             {
-                ["parts"] = new JsonArray
-                {
-                    new JsonObject { ["type"] = "text", ["text"] = message }
-                }
+                new JsonObject { ["type"] = "text", ["text"] = message }
             };
+
+            if (options?.Files != null)
+            {
+                foreach (var file in options.Files)
+                {
+                    parts.Add(new JsonObject
+                    {
+                        ["type"] = "file",
+                        ["uri"] = file
+                    });
+                }
+            }
+
+            var body = new JsonObject { ["parts"] = parts };
 
             var modelId = options?.Model ?? _config.Model;
             if (modelId != null)

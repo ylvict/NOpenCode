@@ -23,5 +23,15 @@ namespace NOpenCode
             var body = new { name, config };
             return await _http.Post<McpStatus>("/mcp", body, ct);
         }
+
+        public async Task Remove(string name, CancellationToken ct = default)
+        {
+            await _http.Delete<bool>($"/mcp/{name}", ct);
+        }
+
+        public async Task<McpStatus> Update(string name, object config, CancellationToken ct = default)
+        {
+            return await _http.Patch<McpStatus>($"/mcp/{name}", config, ct);
+        }
     }
 }
