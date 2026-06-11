@@ -45,3 +45,7 @@
 - **`ServerManager.cs` line 144 (`return "opencode"`).** This is the CLI executable name, NOT the provider id `Providers.OpenCode`. Do NOT change it to `Providers.OpenCode`.
 - **Don't add `#pragma warning disable` to test source files.** Use `<NoWarn>` in the `.csproj` instead.
 - **`integration-tests.yml` uses `XDG_DATA_HOME`** to isolate the opencode CLI database per run. If you change the server-start logic, preserve the isolation or the SQLite WAL migration can fail intermittently on fresh CI runners.
+- **Cross-platform CLI paths.** `where` is Windows-only; use `which` on Linux/macOS. Always guard with `RuntimeInformation.IsOSPlatform(OSPlatform.Windows)`.
+- **Don't use empty `catch { }`.** At minimum log the exception. In static methods, thread a logger through a static field (e.g. `_globalLog`) set at the entry point.
+- **Real SSE streaming requires `HttpCompletionOption.ResponseHeadersRead`.** Do NOT call the non-streaming `Post<T>` endpoint and then invoke `onChunk` once — that's fake streaming. Use `PostStream` + `SseReader` to parse `event:` / `data:` lines.
+- **Test internal types with `<InternalsVisibleTo>`.** Add it to the SDK `.csproj` rather than making types `public` just for testing.
