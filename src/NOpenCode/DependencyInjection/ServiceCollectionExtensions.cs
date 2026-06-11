@@ -19,11 +19,10 @@ namespace NOpenCode
             configure(builder);
 
             services.AddSingleton(builder);
-            services.AddSingleton<OpenCodeClient>(sp =>
+            services.AddSingleton<OpenCodeClient>(_ =>
             {
-                var client = builder.Launch()
+                return Task.Run(builder.Launch)
                     .GetAwaiter().GetResult();
-                return client;
             });
 
             services.AddSingleton<IHostedService>(sp =>
