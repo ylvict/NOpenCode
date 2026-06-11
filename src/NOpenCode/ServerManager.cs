@@ -16,6 +16,9 @@ namespace NOpenCode
 
         private static readonly int[] DefaultPorts = { 4096, 54321, 9123 };
 
+        private static Action<string>? _globalLog;
+
+        private readonly Action<string>? _log;
         private Process? _process;
         private readonly string _baseUrl;
         private readonly int _port;
@@ -25,19 +28,24 @@ namespace NOpenCode
 
         public string BaseUrl => _baseUrl;
 
-        private ServerManager(string baseUrl, int port, bool externallyManaged, string? dataDir = null)
+        private ServerManager(string baseUrl, int port, bool externallyManaged, string? dataDir = null, Action<string>? log = null)
         {
             _baseUrl = baseUrl;
             _port = port;
             _externallyManaged = externallyManaged;
             _dataDir = dataDir;
+            _log = log;
         }
 
         public static async Task<ServerManager> Start(ServerOptions options)
         {
+            _globalLog = options.Log;
             var existing = await TryReuseExisting(options);
             if (existing != null)
+            {
+                options.Log?.Invoke($"Reusing existing opencode serve on port {existing._port}");
                 return existing;
+            }
 
             return await StartNewServer(options);
         }
@@ -76,12 +84,14 @@ namespace NOpenCode
             var port = options.Port ?? GetRandomPort();
             var url = $"http://127.0.0.1:{port}";
 
+            options.Log?.Invoke($"Starting opencode serve on port {port}");
+
             var dataDir = Path.Combine(Path.GetTempPath(), "opencode-sdk", Path.GetRandomFileName());
             Directory.CreateDirectory(dataDir);
 
             var process = StartProcess(cliPath, port, dataDir);
 
-            var mgr = new ServerManager(url, port, externallyManaged: false, dataDir)
+            var mgr = new ServerManager(url, port, externallyManaged: false, dataDir, options.Log)
             {
                 _process = process
             };
@@ -143,9 +153,9 @@ namespace NOpenCode
 
         private static string? FindOpenCodeCli()
         {
-            var fromWhere = FindCliViaWhere();
-            if (fromWhere != null)
-                return fromWhere;
+            var fromWhich = FindCliViaWhich();
+            if (fromWhich != null)
+                return fromWhich;
 
             if (CanRunDirectly())
                 return "opencode";
@@ -182,22 +192,24 @@ namespace NOpenCode
                         return candidate;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                _globalLog?.Invoke($"Failed to check npm global CLI path: {ex.Message}");
             }
 
             return null;
         }
 
-        private static string? FindCliViaWhere()
+        private static string? FindCliViaWhich()
         {
+            var cmd = IsWindows() ? "where" : "which";
             try
             {
                 using var proc = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = "where",
+                        FileName = cmd,
                         Arguments = "opencode",
                         UseShellExecute = false,
                         CreateNoWindow = true,
@@ -226,8 +238,9 @@ namespace NOpenCode
 
                 return path;
             }
-            catch
+            catch (Exception ex)
             {
+                _globalLog?.Invoke($"Failed to locate opencode via which/where: {ex.Message}");
                 return null;
             }
         }
@@ -254,8 +267,9 @@ namespace NOpenCode
                 proc.WaitForExit(3000);
                 return proc.ExitCode == 0;
             }
-            catch
+            catch (Exception ex)
             {
+                _globalLog?.Invoke($"Failed to run opencode directly: {ex.Message}");
                 return false;
             }
         }
@@ -275,8 +289,9 @@ namespace NOpenCode
 
                 return health?.Healthy == true;
             }
-            catch
+            catch (Exception ex)
             {
+                _globalLog?.Invoke($"Health check failed for {url}: {ex.Message}");
                 return false;
             }
         }
@@ -296,13 +311,19 @@ namespace NOpenCode
                 using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
                 await client.PostAsync($"{_baseUrl}/instance/dispose", null);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                _log?.Invoke($"Failed to dispose server instance: {ex.Message}");
+            }
 
             try
             {
                 KillProcessTree(_process);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                _log?.Invoke($"Failed to kill process tree: {ex.Message}");
+            }
 
             _process.Dispose();
             _process = null;
@@ -320,7 +341,10 @@ namespace NOpenCode
                 if (Directory.Exists(_dataDir))
                     Directory.Delete(_dataDir, recursive: true);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                _log?.Invoke($"Failed to clean up data directory {_dataDir}: {ex.Message}");
+            }
         }
 
         private static void KillProcessTree(Process process)
@@ -365,5 +389,6 @@ namespace NOpenCode
     {
         public int? Port { get; set; }
         public int StartTimeoutSeconds { get; set; } = 30;
+        public Action<string>? Log { get; set; }
     }
 }

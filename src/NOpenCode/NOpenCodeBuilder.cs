@@ -122,6 +122,11 @@ namespace NOpenCode
             return this;
         }
 
+        /// <summary>
+        /// Automatically discovers or starts an opencode server.
+        /// This is the default behavior — the method exists for explicitness
+        /// in builder chains and is always enabled.
+        /// </summary>
         public NOpenCodeBuilder WithAutoServer()
         {
             return this;
@@ -145,7 +150,8 @@ namespace NOpenCode
             var options = new ServerOptions
             {
                 Port = Port,
-                StartTimeoutSeconds = StartTimeoutSeconds
+                StartTimeoutSeconds = StartTimeoutSeconds,
+                Log = LogCallback
             };
 
             var server = await ServerManager.Start(options);
