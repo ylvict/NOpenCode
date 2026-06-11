@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -103,26 +102,6 @@ namespace NOpenCode
                     path, $"Server returned {response.StatusCode}", (int)response.StatusCode, responseBody);
             }
             return await response.Content.ReadAsStreamAsync();
-        }
-
-        public async IAsyncEnumerable<string> ReadSse(string path, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct = default)
-        {
-            using var request = new HttpRequestMessage(HttpMethod.Get, path);
-            using var response = await _http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct);
-            response.EnsureSuccessStatusCode();
-
-            using var stream = await response.Content.ReadAsStreamAsync();
-            using var reader = new StreamReader(stream);
-
-            while (!ct.IsCancellationRequested)
-            {
-                var line = await reader.ReadLineAsync();
-                if (line == null) break;
-                if (line.StartsWith("data: "))
-                {
-                    yield return line.Substring(6);
-                }
-            }
         }
 
         private async Task<T> HandleResponse<T>(HttpResponseMessage response, string path, CancellationToken ct)

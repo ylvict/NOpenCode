@@ -70,6 +70,9 @@ namespace NOpenCode
                 var url = $"http://127.0.0.1:{port}";
                 if (await IsHealthy(url))
                     return new ServerManager(url, port, externallyManaged: true);
+
+                if (ActiveServers.ContainsKey(port))
+                    ActiveServers.TryRemove(port, out _);
             }
 
             return null;
