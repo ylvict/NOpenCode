@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>NOpenCode</PackageId>
-    <Version>0.2.2</Version>
+    <Version>0.3.0</Version>
     <Authors>ylvict</Authors>
     <Description>Empower your .NET applications with OpenCode's AI engine. Express your intent in natural language — NOpenCode bridges your application logic with AI.</Description>
     <PackageTags>opencode;ai;sdk;llm;chat;copilot;assistant;dotnet;csharp;natural-language;mcp;sse;integration;automation</PackageTags>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <InternalsVisibleTo Include="NOpenCode.Tests" />
     <PackageReference Include="System.Text.Json" Version="10.0.8" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.8" />

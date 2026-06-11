@@ -112,6 +112,7 @@ public class PartTests
         Assert.Null(part.ToolName);
         Assert.Null(part.ToolArgs);
         Assert.Null(part.Result);
+        Assert.Null(part.Uri);
     }
 
     [Fact]
@@ -123,13 +124,15 @@ public class PartTests
             Text = "output",
             ToolName = "bash",
             ToolArgs = "echo hi",
-            Result = "hi"
+            Result = "hi",
+            Uri = "file:///path/to/file.cs"
         };
         Assert.Equal("toolUse", part.Type);
         Assert.Equal("output", part.Text);
         Assert.Equal("bash", part.ToolName);
         Assert.Equal("echo hi", part.ToolArgs);
         Assert.Equal("hi", part.Result);
+        Assert.Equal("file:///path/to/file.cs", part.Uri);
     }
 }
 

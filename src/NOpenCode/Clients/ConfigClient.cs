@@ -21,5 +21,10 @@ namespace NOpenCode
         {
             return await _http.Patch<NOpenCodeConfig>("/config", patch, ct);
         }
+
+        public async Task<NOpenCodeConfig> Update(NOpenCodeConfig config, CancellationToken ct = default)
+        {
+            return await _http.Patch<NOpenCodeConfig>("/config", config, ct);
+        }
     }
 }

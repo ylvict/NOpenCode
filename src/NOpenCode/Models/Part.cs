@@ -18,5 +18,8 @@ namespace NOpenCode
 
         [JsonPropertyName("result")]
         public string? Result { get; set; }
+
+        [JsonPropertyName("uri")]
+        public string? Uri { get; set; }
     }
 }

@@ -39,16 +39,18 @@ namespace NOpenCode
             return this;
         }
 
-        public async Task<string> Execute()
+        public async Task<string> Execute(CancellationToken ct = default)
         {
-            var reply = await ExecuteFull();
+            var reply = await ExecuteFull(ct);
             return reply.GetText();
         }
 
-        public async Task<OpenCodeReply> ExecuteFull()
+        public async Task<OpenCodeReply> ExecuteFull(CancellationToken ct = default)
         {
-            var session = await CreateSessionAsync();
-            var reply = await session.Ask(_prompt);
+            var session = await CreateSessionAsync(ct);
+            var reply = _files.Count > 0
+                ? await session.Ask(_prompt, opts => opts.Files = _files)
+                : await session.Ask(_prompt);
             await session.Delete();
             return reply;
         }
@@ -59,18 +61,21 @@ namespace NOpenCode
             Action<Exception>? onError = null,
             CancellationToken ct = default)
         {
-            var session = await CreateSessionAsync();
-            await session.AskStream(_prompt, null, onChunk, onComplete, onError, ct);
+            var session = await CreateSessionAsync(ct);
+            if (_files.Count > 0)
+                await session.AskStream(_prompt, opts => opts.Files = _files, onChunk, onComplete, onError, ct);
+            else
+                await session.AskStream(_prompt, null, onChunk, onComplete, onError, ct);
         }
 
-        private async Task<OpenCodeSession> CreateSessionAsync()
+        private async Task<OpenCodeSession> CreateSessionAsync(CancellationToken ct = default)
         {
             var title = _prompt.Length > 80
                 ? _prompt.Substring(0, 80) + "..."
                 : _prompt;
 
             var body = new { title };
-            var result = await _http.Post<SessionInfo>("/session", body);
+            var result = await _http.Post<SessionInfo>("/session", body, ct);
             return new OpenCodeSession(_http, _config, result.Id);
         }
     }
